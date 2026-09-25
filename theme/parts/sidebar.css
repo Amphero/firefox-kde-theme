@@ -1,227 +1,372 @@
-/* Sidebar */
+/* Sidebar, modelled on Falkon/Dolphin side panels */
 
 @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
-:root:has(#tabbrowser-tabbox[sidebar-shown]) {
-	@media -moz-pref("sidebar.revamp") and -moz-pref("sidebar.revamp.round-content-area") {
-		--gnome-headerbar-background: var(--gnome-sidebar-background);
-		&[privatebrowsingmode="temporary"] {
-			--gnome-sidebar-background: var(--gnome-headerbar-background) !important;
-		}
-		&:not([privatebrowsingmode="temporary"]):-moz-window-inactive {
-			--gnome-headerbar-background: var(--gnome-sidebar-background) !important;
-		}
-	}
+:root {
+	--sidebar-background-color: var(--kde-window-bg) !important;
+	--sidebar-text-color: var(--kde-window-fg) !important;
+	--sidebar-border-color: var(--kde-toolbar-separator-color) !important;
 }
 
-/* Main sidebar (the launcher strip).
- * Firefox 156 renamed #sidebar-main to #sidebar-container; both are listed so
- * the strip keeps its background across versions. */
+/* Launcher */
 #sidebar-main,
 #sidebar-container {
-	--button-size-icon: var(--gnome-button-size) !important;
-	background-color: var(--gnome-sidebar-background) !important;
+	background-color: var(--kde-window-bg) !important;
+	color: var(--kde-window-fg) !important;
+}
+/* Line next to the launcher (Firefox hides its splitter there) */
+#sidebar-container {
+	border-inline-end: 1px solid var(--kde-toolbar-separator-color) !important;
 }
 
-link[href="chrome://browser/content/sidebar/sidebar-main.css"] + .wrapper {
-	.buttons-wrapper {
-		justify-content: center !important;
-		min-height: calc(var(--gnome-button-size) + (var(--gnome-toolbar-padding) * 2)) !important;
-
-		@media -moz-pref("sidebar.visibility", "expand-on-hover") {
-			padding-block-end: 0 !important;
-		}
-	}
-
-	.tools-and-extensions {		
-		&[orientation="horizontal"] {
-			padding: var(--gnome-toolbar-padding) !important;
-		}
-	}
-	
-	.actions-list {
-		& > moz-button:not(.tools-overflow) {
-			--button-outer-padding-inline: var(--gnome-toolbar-padding) !important;
-			--button-outer-padding-block: calc(var(--gnome-toolbar-spacing) / 2) !important;
-			--toolbarbutton-background-color-active: var(--gnome-selected-color) !important;
-
-			&:last-of-type {
-				--button-outer-padding-block-end: var(--gnome-toolbar-padding) !important;
-			}
-			&:first-of-type {
-				--button-outer-padding-block-start: var(--gnome-toolbar-padding) !important;
-			}
-		}
-	}
+/* Flat tool buttons in the launcher and panel header */
+#sidebar-main,
+#sidebar-container,
+sidebar-panel-header,
+.sidebar-panel-heading,
+.sidebar-panel-heading moz-button,
+.options-container moz-button,
+#sidebar-panel-header moz-button,
+#sidebar-header {
+	--button-background-color: transparent !important;
+	--button-background-color-hover: var(--kde-hover-bg) !important;
+	--button-background-color-active: var(--kde-pressed-bg) !important;
+	--button-background-color-selected: var(--kde-checked-bg) !important;
+	--button-background-color-ghost: transparent !important;
+	--button-background-color-ghost-hover: var(--kde-hover-bg) !important;
+	--button-background-color-ghost-active: var(--kde-pressed-bg) !important;
+	--button-background-color-ghost-selected: var(--kde-checked-bg) !important;
+	/* --button-border is resolved on :root, set it here */
+	--button-border: 1px solid transparent !important;
+	--button-border-color: transparent !important;
+	--button-border-color-hover: var(--kde-hover-border) !important;
+	--button-border-color-active: var(--kde-hover-border) !important;
+	--button-border-color-selected: var(--kde-checked-border) !important;
+	--button-border-color-ghost: transparent !important;
+	--button-border-color-ghost-hover: var(--kde-hover-border) !important;
+	--button-border-color-ghost-active: var(--kde-hover-border) !important;
+	--button-border-color-ghost-selected: var(--kde-checked-border) !important;
+	--button-text-color-selected: var(--kde-window-fg) !important;
+	--button-text-color-ghost-selected: var(--kde-window-fg) !important;
+	--button-background-color-primary: transparent !important;
+	--button-background-color-primary-hover: var(--kde-hover-bg) !important;
+	--button-background-color-primary-active: var(--kde-pressed-bg) !important;
+	--button-border-color-primary: transparent !important;
+	--button-border-color-primary-hover: var(--kde-hover-border) !important;
+	--button-border-color-primary-active: var(--kde-hover-border) !important;
+	--button-text-color-primary: var(--kde-window-fg) !important;
+	--button-text-color-primary-hover: var(--kde-window-fg) !important;
+	--button-text-color-primary-active: var(--kde-window-fg) !important;
+	--button-border-radius: var(--kde-radius) !important;
+	--toolbarbutton-background-color-active: var(--kde-checked-bg) !important;
 }
 
-/* Sidebar content */
+/* Page area without the rounded card */
+#tabbrowser-tabbox {
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	margin: 0 !important;
+	outline: none !important;
+	overflow: visible !important;
+}
+
+/* Panel: window color, 32px title row, search field, list */
 #sidebar-box {
-	background-color: var(--gnome-sidebar-background) !important;
+	background-color: var(--kde-window-bg) !important;
+	color: var(--kde-window-fg) !important;
 	padding: 0 !important;
-	@media -moz-pref("sidebar.revamp") and -moz-pref("sidebar.revamp.round-content-area") {
-		#browser:has(#tabbrowser-tabbox[sidebar-shown]) & {
-			padding: var(--gnome-toolbar-padding) !important;
-			padding-top: 0 !important;
-		}		
-	}
 }
-
-#sidebar-box:-moz-window-inactive label, #sidebar-box:-moz-window-inactive image,
-.sidebar-panel:-moz-window-inactive label, .sidebar-panel:-moz-window-inactive image,
-.tools-and-extensions:-moz-window-inactive,
-.sidebar-placesTreechildren:-moz-window-inactive {
-	opacity: 0.7 !important;
-}
-
 #sidebar {
-	background-color: var(--gnome-secondary-sidebar-background) !important;
+	background-color: var(--kde-window-bg) !important;
 	border: 0 !important;
 	border-radius: 0 !important;
 	box-shadow: none !important;
 	outline: 0 !important;
-	
-	@media -moz-pref("sidebar.revamp") and -moz-pref("sidebar.revamp.round-content-area") {
-		#browser:has(#tabbrowser-tabbox[sidebar-shown]) & {
-			background-color: var(--gnome-card-background) !important;
-			border-radius: var(--gnome-card-radius) !important;
-			box-shadow: var(--gnome-card-shadow) !important;
-		}
-	}
 }
 
-#sidebar-search-container {
-	padding: var(--gnome-toolbar-padding) !important;
-}
-
-/* Separator
- * Painted as an opaque 1px background rather than a translucent border: the
- * two splitters sit on different surfaces, so a translucent line came out
- * darker on one side and lighter on the other. */
 #sidebar-splitter,
 #sidebar-launcher-splitter {
-	background-color: var(--gnome-sidebar-background) !important;
+	background-color: var(--kde-toolbar-separator-color) !important;
 	border: 0 !important;
 	margin: 0 !important;
 	outline: 0 !important;
+	width: 1px !important;
 	transition: none !important;
-	width: 0 !important;
-	
-	@media not -moz-pref("sidebar.revamp.round-content-area") {
-		background-color: var(--gnome-sidebar-border-color) !important;
-		width: 1px !important;
-	}
-	
-	@media -moz-pref("sidebar.revamp") and (not -moz-pref("sidebar.verticalTabs")) {
-		display: flex !important;
-    }
 }
-
-#sidebar-launcher-splitter {
-	@media -moz-pref("sidebar.revamp") and -moz-pref("sidebar.revamp.round-content-area") {
-		#browser:has(#sidebar-box[sidebar-panel-open]) & {
-			border-right-width: 1px !important;
-		}
-	}
-}
-
 #sidebar-tools-and-extensions-splitter {
 	background: transparent !important;
 	margin-block: 0 !important;
 }
 
-.sidebar-panel {
-	padding-block: 0 !important;
-	
-	.sidebar-panel-heading  {
-		margin-block-end: 12px !important;
-	}
+#bookmarksPanel,
+#history-panel,
+html:has(> body > :is(sidebar-history, sidebar-syncedtabs, sidebar-customize)),
+html:has(> body > :is(sidebar-history, sidebar-syncedtabs, sidebar-customize)) > body {
+	background-color: var(--kde-window-bg) !important;
+	color: var(--kde-window-fg) !important;
+	--card-background-color: transparent !important;
+	--card-border-color: transparent !important;
+	--card-box-shadow: none !important;
+	--card-border-radius: 0px !important;
+	--sidebar-box-background: transparent !important;
+	--sidebar-box-border: 0 none transparent !important;
 }
-#sidebar-panel-header {
-	padding-block: 0 !important;
-	padding-inline: var(--gnome-content-padding) !important;
-}
-.sidebar-panel-heading {
-	padding-block: var(--gnome-content-padding) !important;
 
-	> h4 {
-		margin: 0 !important;
-	}
+/* Title row */
+#sidebar-panel-header,
+.sidebar-panel-heading {
+	align-items: center !important;
+	background-color: var(--kde-window-bg) !important;
+	border: 0 !important;
+	margin: 0 !important;
+	min-height: 32px !important;
+	padding: 0 2px 0 8px !important;
 }
 sidebar-panel-header {
-	margin-block-start: 0 !important;
+	background-color: var(--kde-window-bg) !important;
+	border: 0 !important;
+	margin: 0 !important;
 	padding: 0 !important;
 }
+#sidebar-panel-header > h4,
+.sidebar-panel-title {
+	font-size: 1em !important;
+	font-weight: normal !important;
+	margin: 0 !important;
+}
+#sidebar-panel-close,
+.sidebar-panel-heading moz-button {
+	--button-size-icon: 28px !important;
+	--button-min-height: 28px !important;
+	margin: 0 !important;
+}
 
-/* Settings lists */
-/* TODO: Move to lists.css */
-.sidebar-panel .customize-group .extensions,
-link[href="chrome://global/content/elements/moz-fieldset.css"] ~ fieldset #inputs {
-	background: var(--gnome-card-background) !important;
-	border: 0 !important;
-	border-radius: var(--gnome-card-radius) !important;
-	box-shadow: var(--gnome-card-shadow);
-	margin-top: 12px !important;
-	padding: 0 !important;
+/* Search row */
+#sidebar-search-container,
+sidebar-panel-header .options-container,
+.options-container {
+	background-color: var(--kde-window-bg) !important;
+	box-sizing: border-box !important;
+	gap: 4px !important;
+	margin: 0 !important;
+	padding: 0 4px 4px !important;
+}
+#sidebar-search-container moz-input-search,
+.options-container moz-input-search,
+moz-input-search#search-box {
+	--input-text-min-height: 32px !important;
+	--input-height: 32px !important;
+	flex: 1 !important;
+	margin: 0 !important;
+	min-width: 0 !important;
+}
+/* History options button, as high as the field */
+.options-container moz-button.menu-button {
+	--button-size-icon: var(--kde-field-height) !important;
+	--button-min-height: var(--kde-field-height) !important;
+	align-self: center !important;
+	height: var(--kde-field-height) !important;
+	margin: 0 !important;
+	width: var(--kde-field-height) !important;
+}
+
+/* Synced tabs: field without a search row */
+sidebar-panel-header > moz-input-search {
+	box-sizing: border-box !important;
+	--input-text-min-height: 32px !important;
+	--input-height: 32px !important;
+	display: block !important;
+	padding: 0 4px 4px !important;
 }
 
 .sidebar-panel {
-	moz-checkbox, moz-radio, .customize-group .extension-item {
-		display: flex !important;
-		padding: 0 !important;
+	gap: 0 !important;
+	padding: 0 !important;
+}
 
-		&:not(:last-of-type) {
-			border-bottom: 1px solid var(--gnome-card-shade-color) !important;
-		}
-		&[slot="nested"]:first-of-type {
-			border-top: 1px solid var(--gnome-card-shade-color) !important;
-		}
-	}
-	
-	moz-checkbox, moz-radio {
-		flex-direction: column;
-		justify-content: center;
-		margin-block-start: 0 !important;
-	}
-	
-	.customize-group .extension-item {
-		align-items: center;
-		min-height: 50px !important;
-		padding: 0 12px !important;
-		
-		&:not(:only-child) {
-			border-top: 1px solid var(--gnome-card-shade-color) !important;
-		}
+/* List area */
+.sidebar-placesTree,
+.sidebar-panel-scrollable-content {
+	background-color: var(--kde-view-bg) !important;
+	border: 0 !important;
+	border-top: 1px solid var(--kde-frame-color) !important;
+	border-radius: 0 !important;
+	color: var(--kde-view-fg) !important;
+	margin: 0 !important;
+	padding: 2px !important;
+}
+
+/* Tree rows */
+treechildren.sidebar-placesTreechildren::-moz-tree-row {
+	min-height: 26px !important;
+	border: 1px solid transparent !important;
+	margin-inline: 2px !important;
+}
+treechildren::-moz-tree-row(hover) {
+	background-color: var(--kde-list-hover-bg) !important;
+	border: 1px solid var(--kde-list-hover-border) !important;
+	border-radius: var(--kde-radius) !important;
+}
+treechildren::-moz-tree-row(selected) {
+	background-color: var(--kde-list-selected-bg) !important;
+	border: 1px solid var(--kde-list-selected-bg) !important;
+	border-radius: var(--kde-radius) !important;
+}
+treechildren::-moz-tree-cell-text(selected) {
+	color: var(--kde-list-selected-fg) !important;
+}
+treechildren::-moz-tree-image {
+	margin-inline-end: 6px !important;
+}
+
+/* History: date groups as tree nodes */
+moz-card.date-card,
+moz-card {
+	--card-background-color: transparent !important;
+	--card-border-color: transparent !important;
+	box-shadow: none !important;
+	border: 0 !important;
+	margin: 0 !important;
+}
+article.moz-card {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+}
+#heading-wrapper > #heading {
+	font-weight: normal !important;
+}
+details#moz-card-details > summary {
+	border: 1px solid transparent !important;
+	border-radius: var(--kde-radius) !important;
+	font-weight: normal !important;
+	min-height: 26px !important;
+	padding-block: 0 !important;
+	padding-inline: 4px !important;
+
+	&:hover {
+		background-color: var(--kde-list-hover-bg) !important;
+		border-color: var(--kde-list-hover-border) !important;
 	}
 }
 
+moz-fieldset.customize-group {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
 
-link[href="chrome://global/content/elements/moz-input-common.css"]:has(~ .nested) {
-	& ~ .content-wrapper {
-		margin-inline: 12px;
-		#label {
-			align-items: center;
-			display: flex !important;
-			gap: var(--gnome-toolbar-spacing);
-			min-height: 50px !important;
-		}
+/* History / synced tabs rows */
+a.fxview-tab-row-main {
+	border: 1px solid transparent !important;
+	border-radius: var(--kde-radius) !important;
+	min-height: 26px !important;
+	padding-block: 0 !important;
+
+	&:hover {
+		background-color: var(--kde-list-hover-bg) !important;
+		border-color: var(--kde-list-hover-border) !important;
 	}
+	&:is(:active, [aria-selected="true"]) {
+		background-color: var(--kde-list-selected-bg) !important;
+		border-color: var(--kde-list-selected-bg) !important;
+		color: var(--kde-list-selected-fg) !important;
+	}
+}
+moz-button.fxview-tab-row-button {
+	--button-min-height: 24px !important;
+	--button-size-icon: 24px !important;
+}
 
-	& ~ .nested {
-		gap: 0 !important;
+fxview-empty-state,
+.fxview-empty-state {
+	background: transparent !important;
+	border: 0 !important;
+	box-shadow: none !important;
+}
+
+/* AI chatbot panel (onboarding page) */
+@-moz-document url-prefix("chrome://browser/content/genai/chat.html") {
+	#multi-stage-message-root {
+		background: var(--kde-window-bg) !important;
+		color: var(--kde-window-fg) !important;
+		font: menu !important;
+	}
+	.onboardingContainer,
+	.onboardingContainer main.screen,
+	.onboardingContainer .section-main,
+	.onboardingContainer .main-content {
+		background: var(--kde-window-bg) !important;
+		border: 0 !important;
+		border-radius: 0 !important;
+		box-shadow: none !important;
+		color: var(--kde-window-fg) !important;
+		font-size: inherit !important;
+		inset: auto !important;
+		margin: 0 !important;
+		max-height: none !important;
+		width: 100% !important;
+	}
+	.onboardingContainer .main-content-inner {
+		gap: 12px !important;
+		padding: 12px 8px !important;
+	}
+	.onboardingContainer :is(h1, #mainContentHeader) {
+		font-size: 1.3em !important;
+		font-weight: normal !important;
+		line-height: 1.3 !important;
+		margin: 0 !important;
+		text-align: start !important;
+	}
+	.onboardingContainer :is(h2, .cta-paragraph, .tile-subtitle, p, span, a, label, button) {
+		font-size: 1em !important;
+		text-align: start !important;
+	}
+	.onboardingContainer .cta-paragraph,
+	.onboardingContainer .tile-subtitle {
+		color: color-mix(in srgb, var(--kde-window-fg) 70%, transparent) !important;
+		font-weight: normal !important;
 		margin: 0 !important;
 	}
-}
 
-/* Sidebar panel header row (history, bookmarks, synced tabs)
- * The overflow menu button sits flush against the search entry; give it the
- * usual toolbar spacing and a square hit area like other icon buttons. */
-.sidebar-panel-header,
-moz-input-search + moz-button,
-moz-button.menu-button {
-	margin-inline-start: var(--gnome-toolbar-spacing) !important;
-}
-moz-button.menu-button {
-	--button-size-icon: var(--gnome-button-size) !important;
-	--button-border-radius: var(--gnome-button-radius) !important;
+	.tiles-single-select-section {
+		background: var(--kde-view-bg) !important;
+		border: 1px solid var(--kde-frame-color) !important;
+		border-radius: var(--kde-radius) !important;
+		gap: 0 !important;
+		padding: 2px !important;
+	}
+	.tiles-single-select-section .select-item {
+		background: transparent !important;
+		border: 1px solid transparent !important;
+		border-radius: var(--kde-radius) !important;
+		box-shadow: none !important;
+		color: var(--kde-view-fg) !important;
+		font-weight: normal !important;
+		margin: 0 !important;
+		min-height: 32px !important;
+
+		& * {
+			font-weight: normal !important;
+		}
+		padding-block: 0 !important;
+
+		&:hover {
+			background: var(--kde-list-hover-bg) !important;
+			border-color: var(--kde-list-hover-border) !important;
+		}
+		&:has(input:checked) {
+			background: var(--kde-list-selected-bg) !important;
+			border-color: var(--kde-list-selected-bg) !important;
+			color: var(--kde-list-selected-fg) !important;
+		}
+	}
+	.onboardingContainer .action-buttons {
+		align-items: stretch !important;
+		width: 100% !important;
+	}
+	#footer {
+		border-color: var(--kde-toolbar-separator-color) !important;
+	}
 }
