@@ -1,42 +1,130 @@
-/* Find bar  */
+/* Find bar, like Falkon's: close button left, wide field,
+ * next/previous buttons, options as toggle buttons */
 
 @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
 findbar {
-	padding: var(--gnome-toolbar-padding) !important;
-	position: relative;
-	
-	.findbar-container {
-		align-items: center;
-		display: flex;
-		justify-content: flex-start;
-		position: relative;
-		flex-direction: row;
+	appearance: none !important;
+	align-items: center !important;
+	background-color: var(--kde-window-bg) !important;
+	border: 0 !important;
+	border-top: 1px solid var(--kde-toolbar-separator-color) !important;
+	color: var(--kde-window-fg) !important;
+	gap: 6px !important;
+	min-height: 42px !important;
+	padding: 5px 6px !important;
+
+	.findbar-closebutton {
+		order: -1 !important;
+		appearance: none !important;
+		border: 1px solid transparent !important;
+		border-radius: var(--kde-radius) !important;
+		height: 32px !important;
+		width: 32px !important;
 		margin: 0 !important;
-		margin-inline-end: var(--gnome-toolbar-padding) !important;
-		height: auto !important;
+		padding: 7px !important;
 
-		.findbar-textbox-wrapper {
-			order: 0;
+		&:hover {
+			background-color: var(--kde-hover-bg) !important;
+			border-color: var(--kde-hover-border) !important;
 		}
-		.findbar-label.found-matches {
-			font-weight: normal !important;
-			order: 1;
-		}
-		.findbar-label.findbar-find-status {
-			font-weight: normal !important;
-			order: 4;
-		}
-		checkbox {
-			order: 2;
-		}
-
-		.findbar-entire-word {
-			margin-inline-end: auto !important;
+		&:hover:active {
+			background-color: var(--kde-pressed-bg) !important;
 		}
 	}
 
-	.findbar-closebutton {
+	.findbar-container {
+		align-items: center !important;
+		flex: 1 !important;
+		gap: 6px !important;
+		height: auto !important;
+		padding: 0 !important;
+	}
+
+	hbox[anonid="findbar-textbox-wrapper"] {
+		align-items: center !important;
+		flex: 1 !important;
+		gap: 6px !important;
+	}
+	.findbar-textbox {
+		flex: 1 !important;
+		min-height: 32px !important;
+		min-width: 100px !important;
+		padding-inline: 6px !important;
+		width: auto !important;
+
+		&[status="notfound"] {
+			background-color: color-mix(in srgb, var(--kde-negative) 25%, var(--kde-view-bg)) !important;
+			border-color: var(--kde-negative) !important;
+		}
+	}
+
+	/* Next before previous, like Falkon */
+	.findbar-find-next {
+		order: 1 !important;
+		list-style-image: var(--kde-icon-find-next) !important;
+	}
+	.findbar-find-previous {
+		order: 2 !important;
+		list-style-image: var(--kde-icon-find-previous) !important;
+	}
+	.findbar-find-previous,
+	.findbar-find-next,
+	checkbox {
+		appearance: none !important;
+		background-color: var(--kde-button-bg) !important;
+		border: 1px solid var(--kde-button-frame-color) !important;
+		border-radius: var(--kde-radius) !important;
+		box-shadow: var(--kde-button-shadow, 0 1px rgba(0, 0, 0, 0.125)) !important;
+		color: var(--kde-button-fg) !important;
 		margin: 0 !important;
+		min-height: 32px !important;
+		-moz-context-properties: fill, fill-opacity !important;
+		fill: currentColor !important;
+
+		&:not([disabled]):hover {
+			border-color: var(--kde-highlight) !important;
+		}
+		&:not([disabled]):hover:active {
+			background-color: var(--kde-button-pressed-bg) !important;
+			box-shadow: none !important;
+		}
+		&[disabled] {
+			box-shadow: none !important;
+			opacity: 0.5 !important;
+		}
+	}
+	.findbar-find-previous,
+	.findbar-find-next {
+		padding: 7px !important;
+		width: 32px !important;
+
+		> .toolbarbutton-icon {
+			height: 16px !important;
+			width: 16px !important;
+		}
+	}
+
+	/* Options as toggle buttons */
+	checkbox {
+		padding: 0 10px !important;
+
+		> .checkbox-check {
+			display: none !important;
+		}
+		.checkbox-label {
+			margin: 0 !important;
+		}
+		&[checked] {
+			background-color: color-mix(in srgb, var(--kde-button-fg) 12.5%, var(--kde-button-bg)) !important;
+			box-shadow: none !important;
+		}
+	}
+
+	.findbar-label,
+	.findbar-find-status {
+		color: color-mix(in srgb, var(--kde-window-fg) 70%, transparent) !important;
+		font-weight: normal !important;
+		margin-inline: 6px !important;
 	}
 }
