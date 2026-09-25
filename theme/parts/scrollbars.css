@@ -1,0 +1,8 @@
+/* Scroll bars in the UI: slim handle, ~22% text color, no groove.
+ * Size comes from the prefs in configuration/user.js. */
+
+@namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+:root, panel, menupopup {
+	scrollbar-color: color-mix(in srgb, var(--kde-window-fg) 22%, var(--kde-view-bg)) transparent !important;
+}
