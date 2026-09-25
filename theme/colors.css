@@ -1,0 +1,92 @@
+/* Colors come from the KDE color scheme via the Breeze GTK theme
+ * (~/.config/gtk-3.0/colors.css). Flatpak Firefox only picks up changes
+ * after a restart.
+ *
+ * System color -> KDE color group:
+ *   -moz-dialog / -moz-dialogtext   Colors:Window
+ *   Field / FieldText               Colors:View
+ *   ButtonFace / ButtonText         Colors:Button
+ *   -moz-headerbar(inactive)        Colors:Header (+ [Inactive])
+ *   SelectedItem / SelectedItemText Colors:Selection
+ *   InfoBackground / InfoText       Colors:Tooltip
+ */
+
+@namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+:root {
+	/* Window */
+	--kde-window-bg: -moz-dialog;
+	--kde-window-fg: -moz-dialogtext;
+	--kde-window-inactive-fg: color-mix(in srgb, var(--kde-window-fg) 60%, var(--kde-window-bg));
+
+	/* View (fields, lists) */
+	--kde-view-bg: Field;
+	--kde-view-fg: FieldText;
+
+	/* Buttons */
+	--kde-button-bg: ButtonFace;
+	--kde-button-fg: ButtonText;
+
+	/* Header colors (-moz-headerbar*) don't work through var(), they are
+	 * written out where needed */
+
+	/* Selection */
+	--kde-selection-bg: SelectedItem;
+	--kde-selection-fg: SelectedItemText;
+	--kde-highlight: var(--kde-selection-bg);
+
+	/* Accent: only available as -moz-buttonactiveface (accent at 33%), and
+	 * only when written out, not through var():
+	 *   rgb(from -moz-buttonactiveface r g b / 1)
+	 * Where a variable is needed, the selection color is used instead. */
+	--kde-accent: SelectedItem;
+
+	/* Frames: text color at 20% (Breeze frame contrast) */
+	--kde-frame-color: color-mix(in srgb, var(--kde-window-fg) 20%, var(--kde-window-bg));
+	--kde-button-frame-color: color-mix(in srgb, var(--kde-button-fg) 20%, var(--kde-button-bg));
+	--kde-separator-color: var(--kde-frame-color);
+	--kde-toolbar-separator-color: color-mix(in srgb, var(--kde-window-bg) 80%, black);
+
+	/* Tool buttons */
+	--kde-hover-bg: transparent;
+	--kde-hover-border: var(--kde-highlight);
+	--kde-pressed-bg: color-mix(in srgb, var(--kde-highlight) 30%, transparent);
+	--kde-checked-bg: color-mix(in srgb, var(--kde-button-fg) 12.5%, transparent);
+	--kde-checked-border: var(--kde-button-frame-color);
+
+	/* Push buttons */
+	--kde-button-pressed-bg: color-mix(in srgb, var(--kde-highlight) 30%, var(--kde-button-bg));
+	--kde-button-default-bg: color-mix(in srgb, var(--kde-highlight) 20%, var(--kde-button-bg));
+	--kde-button-default-border: color-mix(in srgb, var(--kde-highlight) 50%, var(--kde-button-frame-color));
+
+	/* Lists and trees */
+	--kde-list-hover-bg: color-mix(in srgb, var(--kde-highlight) 30%, transparent);
+	--kde-list-hover-border: color-mix(in srgb, var(--kde-highlight) 80%, transparent);
+	--kde-list-selected-bg: var(--kde-highlight);
+	--kde-list-selected-fg: var(--kde-selection-fg);
+
+	/* Tabs: inactive ones are darker(120) */
+	--kde-tabbar-bg: var(--kde-window-bg);
+	--kde-tab-inactive-bg: color-mix(in srgb, var(--kde-window-bg) 83.3%, black);
+	--kde-tab-selected-bg: var(--kde-window-bg);
+	--kde-tab-highlight: var(--kde-highlight);
+	--kde-tab-frame-color: var(--kde-frame-color);
+
+	/* Menus and popups */
+	--kde-menu-bg: var(--kde-window-bg);
+	--kde-menu-fg: var(--kde-window-fg);
+	--kde-menu-border: var(--kde-frame-color);
+	--kde-menu-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+	/* Tooltips */
+	--kde-tooltip-bg: InfoBackground;
+	--kde-tooltip-fg: InfoText;
+	--kde-tooltip-border: color-mix(in srgb, var(--kde-tooltip-fg) 20%, var(--kde-tooltip-bg));
+
+	/* Breeze negative/neutral/positive, same in light and dark */
+	--kde-negative: #da4453;
+	--kde-neutral: #f67400;
+	--kde-positive: #27ae60;
+	--kde-link: LinkText;
+	--kde-visited: VisitedText;
+}

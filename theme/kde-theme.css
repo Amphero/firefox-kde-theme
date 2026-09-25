@@ -1,0 +1,26 @@
+/* Firefox KDE theme */
+
+@import "icons/icons.css";
+@import "colors.css";
+@import "variables.css";
+
+@import "parts/toolbox.css";
+@import "parts/tabsbar.css";
+@import "parts/navbar.css";
+@import "parts/urlbar.css";
+@import "parts/buttons.css";
+@import "parts/icons.css";
+@import "parts/popups.css";
+@import "parts/sidebar.css";
+@import "parts/findbar.css";
+@import "parts/csd.css";
+@import "parts/scrollbars.css";
+
+@namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+/* Theme name in customize mode */
+#customization-footer::before {
+	background: url(../icon.svg) no-repeat left center / contain;
+	content: "Firefox KDE theme v156";
+	padding: 9px 9px 9px 40px;
+}

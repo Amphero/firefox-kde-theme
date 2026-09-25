@@ -1,0 +1,35 @@
+name: Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Smoke test
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup - Install Firefox.deb
+        run: |
+          sudo add-apt-repository ppa:mozillateam/ppa
+          echo '
+          Package: *
+          Pin: release o=LP-PPA-mozillateam
+          Pin-Priority: 1001
+          ' | sudo tee /etc/apt/preferences.d/mozilla-firefox
+          sudo apt update
+          sudo apt install firefox
+
+      - name: Setup - create a Firefox profile
+        run: firefox --headless --createprofile test
+
+      - name: Test - Run the auto install script
+        run: ./scripts/auto-install.sh
+
+      - name: Test - Check the imports and preferences
+        run: |
+          profile=$(find ~/.mozilla/firefox "${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox" -maxdepth 1 -name "*.test" 2>/dev/null | head -n 1)
+          grep -q '@import "firefox-kde-theme/userChrome.css";' "$profile/chrome/userChrome.css"
+          grep -q '@import "firefox-kde-theme/userContent.css";' "$profile/chrome/userContent.css"
+          grep -q 'toolkit.legacyUserProfileCustomizations.stylesheets' "$profile/user.js"
+          test -f "$profile/chrome/firefox-kde-theme/theme/kde-theme.css"

@@ -1,0 +1,25 @@
+/* Breeze metrics (breezemetrics.h, Kirigami units) */
+
+@namespace xul url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+:root {
+	--kde-radius: 5px;           /* Frame_FrameRadius */
+	--kde-small-radius: 3px;
+	--kde-button-size: 32px;
+	--kde-toolbar-icon-size: 22px; /* IconSizes.smallMedium */
+	--kde-field-height: 32px;
+	--kde-toolbar-padding: 6px;  /* ToolBar_ItemMargin */
+	--kde-toolbar-spacing: 0px;  /* ToolBar_ItemSpacing */
+	--kde-tab-height: 30px;      /* TabBar_TabMinHeight */
+	--kde-tab-highlight-width: 3px; /* TabBar_ActiveEffectSize */
+	--kde-tab-max-width: 250px;
+	--kde-tab-item-spacing: 8px; /* TabBar_TabItemSpacing */
+	--kde-menu-padding: 4px;     /* MenuItem_HighlightGap */
+	--kde-menu-item-height: 28px; /* Text + 2 * MenuItem_MarginHeight (4) */
+	--kde-tooltip-padding: 3px;  /* ToolTip_FrameWidth */
+	--kde-animation-time: 100ms; /* Kirigami shortDuration */
+
+	@media (prefers-reduced-motion) {
+		--kde-animation-time: 0ms;
+	}
+}
