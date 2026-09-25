@@ -1,0 +1,121 @@
+/* Navigation bar: flat 32px tool buttons with 22px icons, like Falkon */
+
+@namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+
+:root {
+	--toolbarbutton-border-radius: var(--kde-radius) !important;
+	--toolbarbutton-outer-padding: 0px !important;
+	--toolbarbutton-inner-padding: 5px !important;
+	--toolbarbutton-icon-fill: var(--kde-window-fg) !important;
+	--toolbarbutton-hover-background: var(--kde-hover-bg) !important;
+	--toolbarbutton-active-background: var(--kde-pressed-bg) !important;
+	--toolbarbutton-background-color-hover: var(--kde-hover-bg) !important;
+	--toolbarbutton-background-color-active: var(--kde-pressed-bg) !important;
+	--toolbarbutton-outline-color-hover: var(--kde-hover-border) !important;
+	--toolbarbutton-outline-color-active: var(--kde-hover-border) !important;
+	--toolbarbutton-outline-color-selected: var(--kde-hover-border) !important;
+	--toolbarbutton-outline: 1px solid var(--toolbarbutton-outline-color) !important;
+	--toolbarbutton-outline-offset: -1px !important;
+	--toolbarbutton-outline-color: transparent !important;
+	--toolbar-start-end-padding: var(--kde-toolbar-padding) !important;
+}
+
+/* 7px above, 8px below the field (Falkon) */
+#nav-bar {
+	padding: 7px var(--kde-toolbar-padding) 8px !important;
+	min-height: calc(var(--kde-field-height) + 15px) !important;
+}
+
+/* URL bar takes all the free space */
+#nav-bar toolbarspring {
+	display: none !important;
+}
+
+#nav-bar-customization-target {
+	gap: var(--kde-toolbar-spacing);
+}
+
+/* Tool buttons: frame on hover, 30% highlight when pressed,
+ * 12.5% text color when checked */
+:is(#nav-bar, #TabsToolbar, #PersonalToolbar, #toolbar-menubar, #widget-overflow-mainView, findbar) .toolbarbutton-1 {
+	> .toolbarbutton-icon,
+	> .toolbarbutton-text,
+	> .toolbarbutton-badge-stack {
+		border: 1px solid transparent !important;
+		border-radius: var(--kde-radius) !important;
+		transition: background-color var(--kde-animation-time) ease-out, border-color var(--kde-animation-time) ease-out;
+	}
+
+	&[checked]:not([disabled]) {
+		> .toolbarbutton-icon,
+		> .toolbarbutton-text,
+		> .toolbarbutton-badge-stack {
+			background-color: var(--kde-checked-bg) !important;
+			border-color: var(--kde-checked-border) !important;
+		}
+	}
+
+	&:not([disabled]):hover {
+		> .toolbarbutton-icon,
+		> .toolbarbutton-text,
+		> .toolbarbutton-badge-stack {
+			border-color: var(--kde-hover-border) !important;
+		}
+	}
+
+	&:not([disabled]):is([open], :hover:active) {
+		> .toolbarbutton-icon,
+		> .toolbarbutton-text,
+		> .toolbarbutton-badge-stack {
+			background-color: var(--kde-pressed-bg) !important;
+			border-color: var(--kde-hover-border) !important;
+		}
+	}
+
+	&[disabled] {
+		opacity: 0.4 !important;
+	}
+}
+
+#nav-bar .toolbarbutton-1 {
+	> .toolbarbutton-icon,
+	> .toolbarbutton-badge-stack {
+		height: var(--kde-button-size) !important;
+		width: var(--kde-button-size) !important;
+		min-height: var(--kde-button-size) !important;
+		min-width: var(--kde-button-size) !important;
+		padding: calc((var(--kde-button-size) - var(--kde-toolbar-icon-size)) / 2 - 1px) !important;
+	}
+	> .toolbarbutton-badge-stack {
+		padding: 0 !important;
+		place-content: center !important;
+
+		/* VPN pill keeps its width */
+		&:is(.ipprotection-icon-stack, :has(> .ipprotection-icon-stack)) {
+			width: auto !important;
+			padding-inline: 6px !important;
+		}
+
+		> .toolbarbutton-icon:not(#ipprotection-button *) {
+			height: var(--kde-toolbar-icon-size) !important;
+			width: var(--kde-toolbar-icon-size) !important;
+		}
+	}
+}
+
+.toolbarbutton-1:focus-visible > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack) {
+	border-color: var(--kde-highlight) !important;
+	outline: none !important;
+}
+
+.toolbarbutton-1 > .toolbarbutton-text {
+	min-height: var(--kde-button-size) !important;
+}
+
+toolbarspring {
+	max-width: 10000px !important;
+}
+
+#downloads-indicator-progress-inner {
+	background: conic-gradient(var(--kde-accent) var(--download-progress-pcent), transparent var(--download-progress-pcent)) !important;
+}

@@ -1,314 +1,220 @@
-/* Header bar's URL bar */
+/* URL bar: a Breeze line edit, results in a framed popup below */
 
 @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
 :root {
-	/* Result list metrics (Firefox 156 token names) */
-	--urlbarView-row-padding-inline: var(--gnome-menu-item-inline-padding, 12px) !important;
-	--urlbarView-row-gutter: 2px !important;
-	--urlbarView-results-padding: 0px !important;
-	--urlbarview-row-padding-block: 4px !important;
-	--urlbarview-row-min-height: var(--gnome-button-size) !important;
-	--urlbarview-border-radius: var(--gnome-button-radius) !important;
-	--urlbarview-separator-color: var(--gnome-menu-separator-color) !important;
+	--toolbar-field-background-color: var(--kde-view-bg) !important;
+	--toolbar-field-background-color-focus: var(--kde-view-bg) !important;
+	--toolbar-field-color: var(--kde-view-fg) !important;
+	--toolbar-field-text-color: var(--kde-view-fg) !important;
+	--toolbar-field-text-color-focus: var(--kde-view-fg) !important;
+	--toolbar-field-focus-color: var(--kde-view-fg) !important;
+	--toolbar-field-border-color: var(--kde-frame-color) !important;
+	--toolbar-field-border-color-focus: rgb(from -moz-buttonactiveface r g b / 1) !important;
+	--toolbar-field-focus-border-color: rgb(from -moz-buttonactiveface r g b / 1) !important;
 
-	/* Result list colors: GNOME keeps the text color on selection */
-	--urlbarview-background-color-hover: var(--gnome-hover-color) !important;
-	--urlbarview-background-color-selected: var(--gnome-selected-color) !important;
-	--urlbarview-text-color-selected: var(--gnome-window-color) !important;
-	--urlbarview-text-color-secondary: color-mix(in srgb, currentColor 70%, transparent) !important;
+	--urlbar-border-radius: var(--kde-radius) !important;
+	--urlbarview-border-radius: var(--kde-radius) !important;
+	--urlbar-box-background-color: transparent !important;
+	--urlbar-box-background-color-hover: var(--kde-hover-bg) !important;
+	--urlbar-box-background-color-active: var(--kde-pressed-bg) !important;
+	--urlbar-box-background-color-focus: transparent !important;
+	--urlbar-icon-fill-opacity: 0.8 !important;
+	--urlbar-icon-border-radius: var(--kde-small-radius) !important;
+
+	--urlbarview-background-color-hover: var(--kde-list-hover-bg) !important;
+	--urlbarview-background-color-selected: var(--kde-list-selected-bg) !important;
+	--urlbarview-text-color-selected: var(--kde-list-selected-fg) !important;
+	--urlbarview-text-color-secondary: color-mix(in srgb, var(--kde-view-fg) 65%, transparent) !important;
+	--urlbarview-text-color-action: var(--kde-link) !important;
+	--urlbarview-separator-color: var(--kde-frame-color) !important;
+	--urlbarview-row-min-height: 30px !important;
+	--urlbarview-row-padding-block: 3px !important;
+	--urlbarView-row-gutter: 1px !important;
+	--urlbarview-action-button-background-color: transparent !important;
+	--urlbarview-action-button-background-color-hover: var(--kde-hover-bg) !important;
 }
 
-#urlbar {
-	--urlbar-height: var(--gnome-entry-height);
+#urlbar,
+#searchbar {
+	/* System font like Falkon (Firefox uses 14px) */
+	font-size: 1em !important;
+	--urlbar-height: var(--kde-field-height) !important;
+	--urlbar-container-height: var(--kde-field-height) !important;
+	--urlbar-background-box-shadow-breakout: var(--kde-menu-shadow) !important;
+	--urlbar-background-box-shadow-breakout-compact: var(--kde-menu-shadow) !important;
+	--urlbar-background-outline-focused: none !important;
+	--urlbar-background-inset-breakout: 0px !important;
+	--urlbar-background-border: 1px solid var(--kde-frame-color) !important;
+	--urlbar-background-border-focused: 1px solid rgb(from -moz-buttonactiveface r g b / 1) !important;
+	--urlbar-background-border-breakout: 1px solid rgb(from -moz-buttonactiveface r g b / 1) !important;
+	--urlbar-input-container-outline-breakout: none !important;
+	--urlbar-input-container-outline-breakout-focused: none !important;
+	--urlbar-input-container-border: 1px solid transparent !important;
+	--urlbar-margin-block-start-breakout: 0px !important;
+	color: var(--kde-view-fg) !important;
 }
 
-#urlbar-container {
-	--urlbar-container-height: 34px !important;
-
-	@media (max-width: 630px) {
-		width: auto !important;
-	}
+#urlbar-container, #search-container {
+	--urlbar-container-height: var(--kde-field-height) !important;
+	margin-inline: 2px !important;
+	padding-block: 0 !important;
 }
 
-/* Center the URL bar */
-toolbarspring {
-	max-width: 10000px !important;
-}
-
-/* URL bar */
-#urlbar {
+#urlbar .urlbar-background,
+#searchbar {
+	background-color: var(--kde-view-bg) !important;
+	border: 1px solid var(--kde-frame-color) !important;
+	border-radius: var(--kde-radius) !important;
 	box-shadow: none !important;
-	&[breakout] {
-		width: calc(var(--urlbar-width) - var(--gnome-toolbar-spacing)) !important;
-	}
+	outline: none !important;
+}
+#urlbar:hover:not([focused], [open]) .urlbar-background,
+#searchbar:hover {
+	border-color: rgb(from -moz-buttonactiveface r g b / 1) !important;
+}
+#urlbar[focused] .urlbar-background,
+#searchbar:focus-within {
+	border-color: rgb(from -moz-buttonactiveface r g b / 1) !important;
+}
 
+/* Open results popup */
+#urlbar[open] {
 	.urlbar-background {
-		box-shadow: none !important;
-		border: 0 !important;
-		border-radius: var(--gnome-entry-radius) !important;
-		background: transparent !important;
-		outline: 0 !important;
-	}
-	
-	.urlbar-input-container {
-		padding: 0 !important;
+		border-color: rgb(from -moz-buttonactiveface r g b / 1) !important;
+		box-shadow: var(--kde-menu-shadow) !important;
+		inset: 0 !important;
 	}
 }
-
-.urlbar-input::placeholder, .searchbar-textbox::placeholder {
-	opacity: 0.85 !important;
-}
-
-/* Search mode switcher.
- * Firefox 156 dropped the #urlbar-searchmode-switcher id; it is now a
- * moz-button carrying .searchmode-switcher whose inner button sits in a
- * shadow root, so it has to be driven through the button tokens. Without a
- * radius and an inset it squares off the URL bar's rounded corner. */
-#urlbar .searchmode-switcher {
-	--button-border-radius: var(--gnome-button-radius) !important;
-	--button-background-color: transparent !important;
-	--button-background-color-hover: var(--gnome-hover-color) !important;
-	--button-background-color-active: var(--gnome-active-color) !important;
-	--button-background-color-ghost: transparent !important;
-	--button-background-color-ghost-hover: var(--gnome-hover-color) !important;
-	--button-background-color-ghost-active: var(--gnome-active-color) !important;
-	background-color: transparent !important;
-	border-radius: var(--gnome-button-radius) !important;
-	margin-inline-start: calc(var(--gnome-toolbar-padding) / 2) !important;
-
-	#urlbar[searchmode] & {
-		--button-background-color: var(--gnome-selected-color) !important;
-		--button-background-color-hover: var(--gnome-selected-hover-color) !important;
-		--button-background-color-active: var(--gnome-selected-active-color) !important;
-		--button-background-color-ghost: var(--gnome-selected-color) !important;
-		--button-background-color-ghost-hover: var(--gnome-selected-hover-color) !important;
-		--button-background-color-ghost-active: var(--gnome-selected-active-color) !important;
-	}
-}
-.searchmode-switcher-title {
-	color: var(--gnome-window-color);
-	font-weight: bold;
-}
-.searchmode-switcher-close {
-	background-size: 16px !important;
-	border-radius: 50% !important;
-	height: 24px !important;
-	margin: 0 !important;
-	width: 24px !important;
-}
-
-/* URL bar results */
-.urlbarView {
-	background: transparent !important;
-	color: var(--gnome-window-color) !important;
-	margin: 12px 0 0 0 !important;
-    position: absolute !important;
-    box-shadow: var(--gnome-menu-shadow) !important;
-    border-radius: var(--gnome-popover-radius) !important;
-	width: 100% !important;
-}
-
-.urlbarView-body-outer {
-    background: var(--gnome-menu-background) !important;
-	overflow-x: auto;
-	padding: var(--gnome-menu-padding) calc(var(--gnome-menu-padding) + 2px) !important;
-}
-
-.urlbarView-body-inner {
+.urlbar-input-container {
 	border: 0 !important;
-}
-
-.urlbarView-results {
-	padding: 0 !important;
-}
-
-.urlbarView-row {
-	/* GNOME list rows are inset and rounded, like menu items */
-	border-radius: var(--gnome-button-radius) !important;
-
-	&[selected] {
-		background: var(--gnome-selected-color) !important;
-		color: var(--gnome-window-color) !important;
-		
-		&:hover {
-			background: var(--gnome-selected-hover-color) !important;
-		}
-	}
-
-	&:not([selected]) {
-		&:hover {
-			background: var(--gnome-hover-color) !important;
-		}
-			&:active {
-			background: var(--gnome-active-color) !important;
-		}
-	}
-
-	.urlbarView-row-inner, .urlbarView-no-wrap  {
-		align-items: center !important;
-	}
-	
-	.urlbarView-url {
-		color: var(--gnome-accent) !important;
-	}
-	
-	&[label]::before {
-		color: var(--gnome-window-color) !important;
-		font: menu !important;
-		font-weight: bold !important;
-	}
-}
-
-.urlbarView-action {
-	.urlbarView-row[has-action]:is([type="switchtab"], [type="remotetab"], [type="clipboard"]) & {
-		align-items: center;
-		background-color: var(--gnome-trough-background) !important;
-		border-radius: 14px !important;
-		border: 0 !important;
-		color: var(--gnome-menu-color);
-		display: flex;
-		height: 28px !important;
-		padding: 0 12px !important;
-
-		&.urlbarView-switchToTab {
-			padding-inline-start: calc(12px + 8px + 2px) !important;
-		}
-		
-		/* Copied from original sheet */
-		.urlbarView-row[has-url]:is([type=remotetab], [sponsored]):is([selected], :hover) > .urlbarView-row-inner > .urlbarView-no-wrap > &,
-		.urlbarView-row:is([type=search], [restyled-search]):not([selected], [show-action-text], :hover) &,
-		.urlbarView[action-override] .urlbarView-row[type=switchtab] > .urlbarView-row-inner > .urlbarView-no-wrap > & {
-			padding: 0 !important;
-		}
-	}	
-}
-
-/* Search engines buttons */	
-.search-one-offs {
-	padding: 8px !important;
-	background: var(--gnome-menu-background) !important;
-	border-top: 1px solid var(--gnome-menu-separator-color) !important;
-	border-radius: 0 0 8px 8px !important;
-}
-
-.search-one-offs[is_searchbar="true"] {
-	margin-bottom: -8px !important;
-}
-
-/* Search bar result */
-#PopupSearchAutoComplete {
-  margin-top: 7px !important;
-}
-
-/* URL bar and Search bar */
-#searchbar > .searchbar-textbox[focused] .searchbar-search-button {
-	margin-left: -1px !important;
-}
-#searchbar > .searchbar-textbox[focused] .search-go-button {
-	margin-right: -1px !important;
-}
-
-/* URL bar and Search bar's icons */
-.urlbar-icon:hover,
-.urlbar-icon-wrapper:hover,
-.urlbar-icon[open],
-.urlbar-icon-wrapper[open],
-.urlbar-icon:hover:active,
-.urlbar-icon-wrapper:hover:active,
-.searchbar-search-button:hover .searchbar-search-icon,
-.searchbar-search-button[open] .searchbar-search-icon,
-.searchbar-search-button:hover:active .searchbar-search-icon {
-	background-color: transparent !important;
-	fill-opacity: 1 !important;
-}
-
-#urlbar .urlbar-icon {
-	margin: 0 !important;
-	height: 100%  !important;
-}
-#notification-popup-box {
-	height: 100%  !important;
-}
-
-@media -moz-pref("browser.urlbar.richSuggestions.featureGate") {
-	#urlbar:not(.searchButton) > .urlbar-input-container > #identity-box[pageproxystate="invalid"] > .identity-box-button {
-		margin-inline-start: 2px;
-	}
-}
-
-/* Remote control (automation) indicator
- * Firefox sizes this box with --urlbar-basic-component-size and puts it flush
- * against the URL bar's rounded edge, which leaves the robot icon cramped in
- * the corner. Give it the same footprint as the other URL bar indicators. */
-#remote-control-box {
-	block-size: var(--gnome-entry-height) !important;
-	inline-size: var(--gnome-entry-height) !important;
-	margin-inline-start: calc(var(--gnome-toolbar-padding) / 2) !important;
-}
-#remote-control-icon {
-	height: var(--icon-size) !important;
-	width: var(--icon-size) !important;
-}
-
-/* Search mode indicator */
-#urlbar-search-mode-indicator,
-#urlbar-label-box,
-#urlbar-zoom-button {
-	background: var(--gnome-button-background) !important;
-	border: 0 !important;
-	border-radius: 26px !important;
-	outline: 0 !important;
-	margin: 4px 0;
-}
-#urlbar-search-mode-indicator {
-	padding-right: 0 !important;
-}
-#urlbar-search-mode-indicator-title {
-	color: var(--gnome-window-color);
+	height: var(--urlbar-height) !important;
+	outline: none !important;
+	padding-block: 0 !important;
 	padding-inline: 4px !important;
 }
-#urlbar-search-mode-indicator-close {
-	background-size: 16px !important;
-	background-position: center;
-	border-radius: 26px !important;
-	padding: 5px !important;
-}
-#urlbar-search-mode-indicator-close:hover {
-	background-color: var(--gnome-button-hover-background) !important;
-}
-#urlbar-zoom-button {
-	opacity: 0.8;
-}
-#urlbar-zoom-button:hover {
-	opacity: 1;
+
+.urlbar-input::placeholder,
+.searchbar-textbox::placeholder {
+	color: color-mix(in srgb, var(--kde-view-fg) 50%, transparent) !important;
+	opacity: 1 !important;
 }
 
-/* Firefox identity box */
-#identity-box[pageproxystate="valid"].notSecureText > .identity-box-button,
+/* No frames on the icons in the field, like Falkon */
+#urlbar :is(.urlbar-page-action, .identity-box-button, #trust-icon-container, #tracking-protection-icon-container, #remote-control-box, #notification-popup-box, .urlbar-go-button, #star-button-box, #picture-in-picture-button, #reader-mode-button) {
+	background-color: transparent !important;
+	border-radius: var(--kde-small-radius) !important;
+	outline: none !important;
+}
+
+/* Search engine switcher, frameless too */
+#urlbar .searchmode-switcher {
+	--button-border: 1px solid transparent !important;
+	--button-border-radius: var(--kde-small-radius) !important;
+	--button-background-color: transparent !important;
+	--button-background-color-hover: transparent !important;
+	--button-background-color-active: transparent !important;
+	--button-background-color-ghost: transparent !important;
+	--button-background-color-ghost-hover: transparent !important;
+	--button-background-color-ghost-active: transparent !important;
+	--button-background-color-muted: transparent !important;
+	--button-background-color-muted-hover: transparent !important;
+	--button-background-color-muted-active: transparent !important;
+	--button-border-color: transparent !important;
+	--button-border-color-hover: transparent !important;
+	--button-border-color-active: transparent !important;
+	--button-border-color-ghost: transparent !important;
+	--button-border-color-ghost-hover: transparent !important;
+	--button-border-color-ghost-active: transparent !important;
+	--button-border-color-muted: transparent !important;
+	--button-border-color-muted-hover: transparent !important;
+	--button-border-color-muted-active: transparent !important;
+	background-color: transparent !important;
+}
+
+.urlbarView {
+	color: var(--kde-view-fg) !important;
+	margin-inline: 0 !important;
+	width: 100% !important;
+}
+.urlbarView-body-inner {
+	border-top: 1px solid var(--kde-frame-color) !important;
+}
+.urlbarView-results {
+	padding-block: 4px !important;
+}
+.urlbarView-row {
+	border-radius: var(--kde-radius) !important;
+	margin-inline: 4px !important;
+
+	&:hover:not([selected]) {
+		outline: 1px solid var(--kde-list-hover-border) !important;
+		outline-offset: -1px !important;
+	}
+	&[selected] {
+		color: var(--kde-list-selected-fg) !important;
+
+		.urlbarView-url,
+		.urlbarView-secondary,
+		.urlbarView-title-separator,
+		.urlbarView-action {
+			color: inherit !important;
+		}
+	}
+}
+.urlbarView-row-inner,
+.urlbarView-no-wrap {
+	border-radius: var(--kde-radius) !important;
+}
+.urlbarView-url {
+	color: var(--kde-link) !important;
+}
+.search-one-offs {
+	border-top: 1px solid var(--kde-frame-color) !important;
+}
+.searchbar-engine-one-off-item {
+	border: 1px solid transparent !important;
+	border-radius: var(--kde-radius) !important;
+	&:hover {
+		background-color: var(--kde-hover-bg) !important;
+		border-color: var(--kde-hover-border) !important;
+	}
+	&[selected] {
+		background-color: var(--kde-list-selected-bg) !important;
+		border-color: var(--kde-list-selected-bg) !important;
+		color: var(--kde-list-selected-fg) !important;
+	}
+}
+
+/* "Not secure" in red */
+#trust-icon-container,
 #identity-box[pageproxystate="valid"].chromeUI > .identity-box-button,
 #identity-box[pageproxystate="valid"].extensionPage > .identity-box-button,
 #urlbar-label-box {
 	background-color: transparent !important;
 }
-
-#identity-box[pageproxystate="valid"].notSecureText > .identity-box-button:hover:not([open]),
-#identity-box[pageproxystate="valid"].chromeUI > .identity-box-button:hover:not([open]),
-#identity-box[pageproxystate="valid"].extensionPage > .identity-box-button:hover:not([open]) {
-	background-color: hsla(0,0%,70%,.2) !important;
+#identity-box[pageproxystate="valid"].notSecureText #identity-icon-label {
+	color: var(--kde-negative) !important;
 }
 
-#identity-box[pageproxystate="valid"].notSecureText > .identity-box-button:hover:active,
-#identity-box[pageproxystate="valid"].notSecureText > .identity-box-button[open],
-#identity-box[pageproxystate="valid"].chromeUI > .identity-box-button:hover:active,
-#identity-box[pageproxystate="valid"].chromeUI > .identity-box-button[open],
-#identity-box[pageproxystate="valid"].extensionPage > .identity-box-button:hover:active,
-#identity-box[pageproxystate="valid"].extensionPage > .identity-box-button[open] {
-	background-color: hsla(0,0%,70%,.3) !important;
-}
+/* Result action buttons */
+.urlbarView-action-btn,
+.urlbarView-action.urlbarView-switchToTab {
+	background-color: var(--kde-button-bg) !important;
+	border: 1px solid var(--kde-button-frame-color) !important;
+	border-radius: var(--kde-radius) !important;
+	box-shadow: 0 1px rgba(0, 0, 0, 0.125) !important;
+	color: var(--kde-button-fg) !important;
 
-@media -moz-pref("browser.urlbar.richSuggestions.featureGate") {
-	#identity-box[pageproxystate="invalid"] > .identity-box-button {
-		padding-inline:  var(--urlbar-icon-padding) !important;
+	&:hover {
+		border-color: var(--kde-highlight) !important;
 	}
+	&[selected],
+	&:is(.urlbarView-row[selected] *) {
+		background-color: var(--kde-button-default-bg) !important;
+		border-color: var(--kde-button-default-border) !important;
+	}
+}
+.urlbarView-action-btn-label {
+	color: inherit !important;
 }
