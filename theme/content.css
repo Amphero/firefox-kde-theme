@@ -1,0 +1,240 @@
+/* about: pages (new tab, preferences, ...). Scoped to about: because
+ * userContent.css applies to every site. */
+
+@import "icons/content-icons.css";
+
+@-moz-document url-prefix("about:") {
+	/* In content, Canvas/Field/ButtonFace are Firefox's own colors, and
+	 * -moz-sidebar only works written out, not through var(). So only
+	 * -moz-dialog and SelectedItem are used, the view colors are derived. */
+	:root {
+		--kde-window-bg: -moz-dialog;
+		--kde-window-fg: -moz-dialogtext;
+		--kde-view-bg: light-dark(white, color-mix(in srgb, -moz-dialog 60%, black));
+		--kde-view-fg: -moz-dialogtext;
+		--kde-button-bg: light-dark(color-mix(in srgb, -moz-dialog 25%, white), color-mix(in srgb, -moz-dialog 92%, -moz-dialogtext));
+		--kde-button-fg: var(--kde-window-fg);
+		--kde-selection-bg: SelectedItem;
+		--kde-selection-fg: SelectedItemText;
+		--kde-accent: SelectedItem;
+		--kde-highlight: SelectedItem;
+		--kde-frame-color: color-mix(in srgb, var(--kde-window-fg) 20%, var(--kde-window-bg));
+		--kde-button-frame-color: color-mix(in srgb, var(--kde-button-fg) 20%, var(--kde-button-bg));
+		--kde-radius: 5px;
+
+		/* Firefox's own tokens */
+		--background-color-canvas: var(--kde-window-bg) !important;
+		--background-color-box: var(--kde-view-bg) !important;
+		--text-color: var(--kde-window-fg) !important;
+		--border-color: var(--kde-frame-color) !important;
+		--border-color-interactive: var(--kde-frame-color) !important;
+		--border-color-interactive-hover: var(--kde-accent) !important;
+		--color-accent-primary: var(--kde-accent) !important;
+		--color-accent-primary-hover: color-mix(in srgb, var(--kde-accent) 85%, white) !important;
+		--color-accent-primary-active: color-mix(in srgb, var(--kde-accent) 85%, black) !important;
+		--focus-outline-color: var(--kde-accent) !important;
+		--link-color: LinkText !important;
+		--link-color-hover: LinkText !important;
+		--link-color-active: LinkText !important;
+		--link-color-visited: VisitedText !important;
+
+		/* Buttons */
+		--button-border-radius: var(--kde-radius) !important;
+		--button-font-weight: normal !important;
+		--button-background-color: var(--kde-button-bg) !important;
+		--button-background-color-hover: var(--kde-button-bg) !important;
+		--button-background-color-active: color-mix(in srgb, var(--kde-highlight) 30%, var(--kde-button-bg)) !important;
+		--button-text-color: var(--kde-button-fg) !important;
+		--button-text-color-hover: var(--kde-button-fg) !important;
+		--button-border-color: var(--kde-button-frame-color) !important;
+		--button-border-color-hover: var(--kde-highlight) !important;
+		--button-border-color-active: var(--kde-highlight) !important;
+		--button-background-color-primary: color-mix(in srgb, var(--kde-highlight) 20%, var(--kde-button-bg)) !important;
+		--button-background-color-primary-hover: color-mix(in srgb, var(--kde-highlight) 20%, var(--kde-button-bg)) !important;
+		--button-background-color-primary-active: color-mix(in srgb, var(--kde-highlight) 30%, var(--kde-button-bg)) !important;
+		--button-text-color-primary: var(--kde-button-fg) !important;
+		--button-text-color-primary-hover: var(--kde-button-fg) !important;
+		--button-text-color-primary-active: var(--kde-button-fg) !important;
+		--button-border-color-primary: color-mix(in srgb, var(--kde-highlight) 50%, var(--kde-button-frame-color)) !important;
+		--button-border-color-primary-hover: var(--kde-highlight) !important;
+		/* Ghost buttons: flat tool buttons */
+		--button-background-color-ghost: transparent !important;
+		--button-background-color-ghost-hover: transparent !important;
+		--button-background-color-ghost-active: color-mix(in srgb, var(--kde-highlight) 30%, transparent) !important;
+		--button-border-color-ghost: transparent !important;
+		--button-border-color-ghost-hover: var(--kde-highlight) !important;
+		--button-border-color-ghost-active: var(--kde-highlight) !important;
+
+		--border-radius-small: 3px !important;
+		--border-radius-medium: var(--kde-radius) !important;
+		--border-radius-large: var(--kde-radius) !important;
+		--border-radius-xlarge: var(--kde-radius) !important;
+		--box-border-radius: var(--kde-radius) !important;
+
+		--input-text-background-color: var(--kde-view-bg) !important;
+		--input-text-color: var(--kde-view-fg) !important;
+		--input-text-border-color: var(--kde-frame-color) !important;
+		--input-text-border-radius: var(--kde-radius) !important;
+
+		/* Older tokens some pages still use */
+		--in-content-page-background: var(--kde-window-bg) !important;
+		--in-content-page-color: var(--kde-window-fg) !important;
+		--in-content-box-background: var(--kde-view-bg) !important;
+		--in-content-box-border-color: var(--kde-frame-color) !important;
+		--in-content-primary-button-background: var(--kde-selection-bg) !important;
+		--in-content-primary-button-text-color: var(--kde-selection-fg) !important;
+	}
+
+	/* Breeze close icon. The <img> is in a shadow tree, hence the src match. */
+	img[src="chrome://global/skin/icons/close.svg"] {
+		content: var(--kde-icon-close) !important;
+		-moz-context-properties: fill, fill-opacity !important;
+		fill: currentColor !important;
+	}
+
+	::selection {
+		background-color: var(--kde-selection-bg) !important;
+		color: var(--kde-selection-fg) !important;
+	}
+}
+
+/* New tab page */
+@-moz-document url("about:newtab"), url("about:home") {
+	body {
+		--newtab-background-color: var(--kde-window-bg) !important;
+		--newtab-background-color-secondary: var(--kde-view-bg) !important;
+		--newtab-text-primary-color: var(--kde-window-fg) !important;
+		--newtab-primary-action-background: var(--kde-accent) !important;
+		--newtab-element-hover-color: color-mix(in srgb, var(--kde-accent) 20%, transparent) !important;
+		--newtab-element-active-color: color-mix(in srgb, var(--kde-accent) 33%, transparent) !important;
+		background-color: var(--kde-window-bg) !important;
+
+		--newtab-background-card: var(--kde-view-bg) !important;
+		--card-border-color: var(--kde-frame-color) !important;
+		--card-box-shadow: none !important;
+		--card-box-shadow-hover: none !important;
+		--box-shadow-level-2: none !important;
+	}
+
+	/* Widgets and top sites: framed, accent frame on hover */
+	:is(article.widget, .weather-widget, .weather-forecast-widget, .top-site-outer .tile) {
+		background-color: var(--kde-view-bg) !important;
+		border: 1px solid var(--kde-frame-color) !important;
+		border-radius: var(--kde-radius) !important;
+		box-shadow: none !important;
+		outline: none !important;
+
+		&:hover {
+			border-color: var(--kde-accent) !important;
+		}
+	}
+	/* The Breeze button is taller, let the weather opt-in card grow */
+	.weather-widget.weather-opt-in {
+		height: auto !important;
+		padding-block-end: 11px !important;
+	}
+	.weather-widget .weather-anchor {
+		border-radius: var(--kde-radius) !important;
+	}
+
+	.open-customization-button {
+		--button-background-color-primary: transparent !important;
+		--button-background-color-primary-hover: transparent !important;
+		--button-border-color-primary: transparent !important;
+		--button-border-color-primary-hover: var(--kde-highlight) !important;
+		--button-text-color-primary: var(--kde-window-fg) !important;
+		--button-text-color-primary-hover: var(--kde-window-fg) !important;
+	}
+
+	/* Checklist "add" button */
+	.lists-add-button {
+		background-color: color-mix(in srgb, var(--kde-highlight) 20%, var(--kde-button-bg)) !important;
+		border: 1px solid color-mix(in srgb, var(--kde-highlight) 50%, var(--kde-button-frame-color)) !important;
+		padding: 4px 8px !important;
+		border-radius: var(--kde-radius) !important;
+		color: var(--kde-button-fg) !important;
+		fill: currentColor !important;
+		font-weight: normal !important;
+
+		&:hover {
+			border-color: var(--kde-highlight) !important;
+		}
+	}
+
+	/* Customize menu: docked panel */
+	.customize-menu {
+		--customize-menu-bg: var(--kde-window-bg) !important;
+		background: var(--kde-window-bg) !important;
+		border: 0 !important;
+		border-inline-start: 1px solid var(--kde-frame-color) !important;
+		border-radius: 0 !important;
+		box-shadow: 0 0 12px rgb(0 0 0 / 0.15) !important;
+		color: var(--kde-window-fg) !important;
+		inset-block: 0 !important;
+		inset-inline-end: 0 !important;
+	}
+	.customize-menu-content :is(.close-button-wrapper, .manage-settings-footer) {
+		background: var(--kde-window-bg) !important;
+	}
+	.customize-menu-content .manage-settings-footer::before {
+		display: none !important;
+	}
+	.customize-menu moz-box-button {
+		--box-background-color: var(--kde-button-bg) !important;
+		--box-border-color: var(--kde-button-frame-color) !important;
+		--box-border-radius: var(--kde-radius) !important;
+		border-radius: var(--kde-radius) !important;
+	}
+
+	/* Search field (in a shadow tree, no outer selectors) */
+	.search-handoff-button {
+		background-color: var(--kde-view-bg) !important;
+		border: 1px solid var(--kde-frame-color) !important;
+		border-radius: var(--kde-radius) !important;
+		box-shadow: none !important;
+	}
+}
+
+@-moz-document url("about:privatebrowsing") {
+	html.private {
+		--background-color-canvas: var(--kde-window-bg) !important;
+		--text-color: var(--kde-window-fg) !important;
+		background: var(--kde-window-bg) !important;
+		color: var(--kde-window-fg) !important;
+	}
+
+	.wordmark {
+		fill: currentColor !important;
+	}
+
+	.search-handoff-button {
+		background-color: var(--kde-view-bg) !important;
+		border: 1px solid var(--kde-frame-color) !important;
+		border-radius: var(--kde-radius) !important;
+		box-shadow: none !important;
+		color: var(--kde-view-fg) !important;
+		outline: none !important;
+
+		&:hover {
+			border-color: var(--kde-accent) !important;
+		}
+	}
+	.fake-editable {
+		background: transparent !important;
+		border: 0 !important;
+	}
+
+	.info-border {
+		background: var(--kde-view-bg) !important;
+		border: 1px solid var(--kde-frame-color) !important;
+		border-radius: var(--kde-radius) !important;
+		box-shadow: none !important;
+		padding: 0 !important;
+
+		.info {
+			background: none !important;
+			box-shadow: none !important;
+			color: var(--kde-window-fg) !important;
+		}
+	}
+}
