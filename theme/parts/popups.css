@@ -1,246 +1,453 @@
-/* Popup menus and context menus */
+/* Menus, context menus and panels like Breeze QMenus */
 
 @namespace xul "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 
+/* Firefox sets these on the popups, so they are overridden there */
+:root, panel, menupopup {
+	--panel-background-color: var(--kde-menu-bg) !important;
+	--panel-text-color: var(--kde-menu-fg) !important;
+	--panel-border-color: var(--kde-menu-border) !important;
+	--panel-border-radius: var(--kde-radius) !important;
+	--panel-box-shadow: var(--kde-menu-shadow) !important;
+	--panel-padding-block: var(--kde-menu-padding) !important;
+	--panel-separator-color: var(--kde-separator-color) !important;
+	--panel-separator-padding-block: var(--kde-menu-padding) !important;
+	--panel-separator-padding-inline: 0px !important;
+	--panel-icon-fill: currentColor !important;
+	--panel-menuitem-border-radius: var(--kde-radius) !important;
+	--panel-menuitem-margin-inline: var(--kde-menu-padding) !important;
+	--panel-menuitem-padding-block: 0px !important;
+	--panel-menuitem-padding-inline: 8px !important;
+	--panel-banner-item-background-color: transparent !important;
+	--panel-banner-item-color: var(--kde-menu-fg) !important;
+	--panel-banner-item-hover-bgcolor: rgb(from -moz-buttonactiveface r g b / 0.3) !important;
+	--panel-banner-item-active-bgcolor: rgb(from -moz-buttonactiveface r g b / 0.3) !important;
+	--panel-list-background-color: var(--kde-menu-bg) !important;
+	--panel-list-text-color: var(--kde-menu-fg) !important;
+	--panel-list-border-color: var(--kde-menu-border) !important;
+	--panel-list-border-radius: var(--kde-radius) !important;
+	--popup-background-color: var(--kde-menu-bg) !important;
+	--popup-border-color: var(--kde-menu-border) !important;
+	--popup-border-radius: var(--kde-radius) !important;
+	--menuitem-border-radius: var(--kde-radius) !important;
+	--menuitem-padding: 0 8px !important;
+	--menuitem-margin: 0 var(--kde-menu-padding) !important;
+	--menuitem-icon-fill: currentColor !important;
+	--arrowpanel-background: var(--kde-menu-bg) !important;
+	--arrowpanel-color: var(--kde-menu-fg) !important;
+	--arrowpanel-border-color: var(--kde-menu-border) !important;
+	--arrowpanel-border-radius: var(--kde-radius) !important;
+	--background-color-canvas: var(--kde-menu-bg) !important;
+}
+
+/* Popup surface */
 menupopup, panel {
-	--gnome-menu-item-block-padding: 4px;
-	--gnome-menu-item-inline-padding: 12px;
-	--gnome-menu-item-padding: var(--gnome-menu-item-block-padding) var(--gnome-menu-item-inline-padding);
-	--gnome-menu-item-inline-margin: var(--gnome-menu-padding);
-	--gnome-menu-item-margin: 0 var(--gnome-menu-item-inline-margin);
-	--gnome-menu-item-radius: var(--gnome-button-radius);
-	
-	/* Panel/popover surface (Firefox 156 token names) */
-	--panel-background-color: var(--gnome-menu-background) !important;
-	--panel-text-color: var(--gnome-menu-color) !important;
-	--panel-border-color: var(--gnome-menu-border-color) !important;
-	--panel-border-radius: var(--gnome-popover-radius) !important;
-	--panel-padding: var(--gnome-menu-padding) !important;
-	--panel-padding-block: var(--gnome-menu-padding) !important;
-	--panel-box-shadow: var(--gnome-menu-shadow) !important;
-	--panel-separator-color: var(--gnome-menu-separator-color) !important;
-
-	/* Menu items (shared by context menus and popovers since Firefox 156) */
-	--menuitem-padding: var(--gnome-menu-item-padding) !important;
-	--menuitem-margin: var(--gnome-menu-item-margin) !important;
-	--menuitem-border-radius: var(--gnome-menu-item-radius) !important;
-	--menuitem-hover-bg: var(--gnome-selected-color) !important;
-	--menuitem-active-bg: var(--gnome-selected-active-color) !important;
-	--menuitem-focus-bg: var(--gnome-selected-color) !important;
-
-	/* Firefox 156 renders some panel rows as moz-button, which hover at 7%
-	 * (ghost) or 15% (regular) while menu items hover at 10%, so visually
-	 * identical rows react differently. Adwaita knows one value for menu
-	 * rows: `popover.menu modelbutton` at 10%, active 19%. */
-	--button-background-color-hover: var(--gnome-selected-color) !important;
-	--button-background-color-active: var(--gnome-selected-active-color) !important;
-	--button-background-color-ghost-hover: var(--gnome-selected-color) !important;
-	--button-background-color-ghost-active: var(--gnome-selected-active-color) !important;
-
-	/* Panel item buttons */
-	--panel-item-padding: var(--gnome-menu-item-padding) !important;
-	--panel-item-button-border-radius: var(--gnome-menu-item-radius) !important;
-	--panel-item-button-margin: var(--gnome-menu-item-margin) !important;
-	--panel-item-button-padding: var(--gnome-menu-item-padding) !important;
+	--panel-box-shadow-margin: 6px !important;
+	color: var(--kde-menu-fg) !important;
+}
+menupopup::part(content),
+panel::part(content) {
+	background: var(--kde-menu-bg) !important;
+	border: 1px solid var(--kde-menu-border) !important;
+	border-radius: var(--kde-radius) !important;
+	box-shadow: var(--kde-menu-shadow) !important;
+	color: var(--kde-menu-fg) !important;
 }
 
-panel:not([remote]) {
-	--panel-background-color: var(--gnome-menu-background) !important;
-	--panel-text-color: var(--gnome-menu-color) !important;
-}
-
-/* Menus */
+/* Menu items (context menus, menu bar, <select>) */
 menupopup {
-	appearance: none !important;	
-	color: var(--gnome-window-color) !important;
-}
+	> menu,
+	> menuitem,
+	menugroup > menuitem {
+		appearance: none !important;
+		border: 1px solid transparent !important;
+		border-radius: var(--kde-radius) !important;
+		color: var(--kde-menu-fg) !important;
+		margin: 0 var(--kde-menu-padding) !important;
+		min-height: var(--kde-menu-item-height) !important;
+		padding: 0 8px !important;
 
-menulist > menupopup {
-	appearance: auto !important;
-	color: revert !important;
-	background: revert !important;
-}
+		&[_moz-menuactive]:not([disabled]) {
+			background-color: rgb(from -moz-buttonactiveface r g b / 0.3) !important;
+			border-color: color-mix(in srgb, rgb(from -moz-buttonactiveface r g b / 1) 85%, -moz-dialogtext) !important;
+			color: var(--kde-menu-fg) !important;
+		}
+		&[_moz-menuactive][disabled] {
+			background-color: transparent !important;
+			border-color: transparent !important;
+		}
+		&[disabled] {
+			color: color-mix(in srgb, var(--kde-menu-fg) 45%, transparent) !important;
+		}
+		&[open] {
+			background-color: rgb(from -moz-buttonactiveface r g b / 0.3) !important;
+			border-color: color-mix(in srgb, rgb(from -moz-buttonactiveface r g b / 1) 85%, -moz-dialogtext) !important;
+		}
+	}
 
-menulist > menupopup menuitem {
-	appearance: auto !important;
-	color: revert !important;
-	background: revert !important;
-	background-color: revert !important;
-	min-height: revert !important;
-	padding-inline-end: revert !important;
-	margin-inline: revert !important;
-	opacity: revert !important;
-	font-weight: normal !important;
-}
+	/* Icon column */
+	.menu-icon,
+	.menu-iconic-left {
+		-moz-context-properties: fill, fill-opacity, stroke !important;
+		fill: currentColor !important;
+	}
 
-menulist > menupopup menuitem[_moz-menuactive]:not([disabled]) {
-	color: revert !important;
-	background: revert !important;
-	background-color: revert !important;
-	outline: revert !important;
-}
+	.menu-accel,
+	.menu-accel-container {
+		color: color-mix(in srgb, var(--kde-menu-fg) 60%, transparent) !important;
+		opacity: 1 !important;
+	}
 
-menulist > menupopup menuseparator {
-	padding: revert !important;
-}
+	menugroup > menuitem.menuitem-iconic {
+		border-radius: var(--kde-radius) !important;
+		&[_moz-menuactive]:not([disabled]) {
+			background-color: var(--kde-hover-bg) !important;
+			border-color: var(--kde-hover-border) !important;
+		}
+	}
 
-menulist > menupopup menucaption {
-	color: revert !important;
+	menuitem:is([type="checkbox"], [type="radio"])[checked] .menu-icon {
+		color: rgb(from -moz-buttonactiveface r g b / 1) !important;
+		fill: currentColor !important;
+	}
 }
 
 menuseparator {
-	padding: var(--gnome-menu-padding) 0 !important;
-}
-menucaption {
-	color: var(--gnome-window-color) !important;
-}
-menulist {
-	padding: 0px !important;
-}
-
-.menupopup-arrowscrollbox {
 	appearance: none !important;
-	border: 0 !important;
-}
+	padding: var(--kde-menu-padding) 0 !important;
+	margin: 0 !important;
 
-/* Menu items */
-@media not -moz-pref("gnomeTheme.noThemedIcons") {
-	menuitem:is([type="checkbox"], [checked]) .menu-icon,
-	menuitem[type="radio"] .menu-icon {
-		visibility: collapse !important;
+	&::before {
+		border-top: 1px solid var(--kde-separator-color) !important;
+		content: "";
+		display: block;
+		flex: 1;
 	}
 }
 
-menuitem {
-	padding-inline-end: 18px !important;
-	
-	&:not([acceltext]) .menu-accel-container {
-		visibility: collapse !important;
-	}
-	
-	&[badge]::after {
-		align-items: center;
-		background-color: var(--gnome-trough-background) !important;
-		border-radius: 14px !important;
-		border: 0 !important;
-		color: var(--gnome-menu-color);
-		display: flex;
-		height: 28px !important;
-		padding: 0 12px !important;
-	}
-	
-	&.badge-new::after {
-		color: var(--gnome-accent) !important;
-	}
+/* Panels (app menu, extensions, downloads, ...) */
+panelview {
+	background: var(--kde-menu-bg) !important;
+	color: var(--kde-menu-fg) !important;
 }
 
-menu, menuitem {
-	margin-inline: 0 !important;
-	&:where([_moz-menuactive]:not([disabled])) {
-		color: currentColor;
-		background-color: transparent !important;
-	}
+.panel-subview-body {
+	padding-block: var(--kde-menu-padding) !important;
 }
 
-menuitem[disabled]:hover, menupopup menu[disabled]:hover {
-	background: transparent !important;
+/* Keep the menu padding below trailing buttons */
+panelview > :is(.subviewbutton, button, .panel-footer, moz-button):last-child,
+panelview > :is(.subviewbutton, button, moz-button):last-of-type:not(.panel-subview-body ~ *),
+#unified-extensions-discover-extensions,
+#unified-extensions-manage-extensions {
+	margin-block-end: var(--kde-menu-padding) !important;
 }
 
-.menu-icon {
-	padding: 0 !important;
-}
-
-/* Popovers */
-panel[type=arrow] {
-	margin-top: var(--gnome-menu-padding) !important; /* Adjust position */
-}
-
-panel toolbarseparator {
-	padding-block: var(--gnome-menu-padding) !important;
-}
-
-/* Popover header */
-.panel-header {
-	position: relative !important;
-}
-.panel-header + toolbarseparator {
-	display: none !important; /* Remove unwanted separators */
-}
-
-.subviewbutton-back {
-	opacity: 1 !important;
-	width: 100%;
-	-moz-box-align: center !important;
-	-moz-box-pack: start !important;
-}
-.subviewbutton-back + h1 {
-	font-weight: normal !important;
-	left: 0 !important;
-	padding: 0 !important;
-	pointer-events: none;
-	position: absolute !important;
-	top: 14px !important;
-	width: 100%;
-}
-
-.subview-subheader,
-.PanelUI-remotetabs-clientcontainer label {
-	font: menu !important;
-	font-weight: bold !important;
-}
-
-/* Popover footer */
-.panel-footer {
-	margin: var(--gnome-menu-padding) !important;
-	margin-top: 0 !important;
-}
-
-/* Menu buttons */
-menuitem, menupopup menu, panelview .toolbarbutton-1,
-.subviewbutton:not(#appMenu-fxa-label2, .toolbaritem-combined-buttons, .remote-tabs-close-button),
-.widget-overflow-list .toolbarbutton-1 {
-	color: var(--gnome-window-color) !important;
-	min-height: 32px !important;
-
-	&:hover, &[_moz-menuactive], &:focus, &:focus-within {
-		&:not([disabled]) {
-			background: var(--gnome-selected-color) !important;
-		}
-		outline: 0 !important;
-	}
-
-	&[disabled] {
-		opacity: .5 !important;
-	}
-
-	&[disabled][_moz-menuactive] {
-		background: transparent !important;
-	}
-}
-
-/* Firefox gives panel rows a literal border-radius instead of using the menu
- * item token: --border-radius-small (4px) for most rows and
- * --border-radius-circle (9999px) for the account row, so rows in the same
- * list end up with three different shapes. */
-panelview .subviewbutton,
-panelview .toolbarbutton-1,
+.subviewbutton,
 .PanelUI-subView .subviewbutton,
-#PanelUI-fxa-menu-manage-account-button,
-#PanelUI-fxa-menu-sync-status-button {
-	border-radius: var(--gnome-menu-item-radius) !important;
+.panel-footer > button,
+.widget-overflow-list .toolbarbutton-1 {
+	appearance: none !important;
+	border: 1px solid transparent !important;
+	border-radius: var(--kde-radius) !important;
+	color: var(--kde-menu-fg) !important;
+	margin-block: 0 !important;
+	margin-inline: var(--kde-menu-padding) !important;
+	min-height: var(--kde-menu-item-height) !important;
+	padding-block: 0 !important;
+	padding-inline: 8px !important;
+
+	&:not([disabled], [open]):hover,
+	&:focus-visible {
+		background-color: rgb(from -moz-buttonactiveface r g b / 0.3) !important;
+		border-color: color-mix(in srgb, rgb(from -moz-buttonactiveface r g b / 1) 85%, -moz-dialogtext) !important;
+		color: var(--kde-menu-fg) !important;
+		outline: none !important;
+	}
+	&:not([disabled]):is(:hover:active, [open], [checked]) {
+		background-color: rgb(from -moz-buttonactiveface r g b / 0.3) !important;
+		border-color: color-mix(in srgb, rgb(from -moz-buttonactiveface r g b / 1) 85%, -moz-dialogtext) !important;
+	}
+
+	> .toolbarbutton-icon {
+		-moz-context-properties: fill, fill-opacity, stroke !important;
+		fill: currentColor !important;
+		fill-opacity: 1 !important;
+		height: 16px !important;
+		width: 16px !important;
+		margin-inline-end: 8px !important;
+	}
+
+	.toolbarbutton-text {
+		padding-inline-start: 0 !important;
+	}
+
+	.subviewbutton-shortcut,
+	> .menu-accel-container {
+		color: color-mix(in srgb, var(--kde-menu-fg) 60%, transparent) !important;
+		opacity: 1 !important;
+	}
 }
 
-.moz-button-subviewbutton-nav {
-	--button-border-radius: var(--gnome-menu-item-radius) !important;
-	margin: var(--gnome-menu-item-margin) !important;
+/* Icon column in the app menu so labels line up */
+#appMenu-popup .subviewbutton:not(.subviewbutton-iconic, .subviewbutton-back, .toolbaritem-combined-buttons) > .toolbarbutton-icon {
+	display: flex !important;
+}
+#appMenu-popup #appMenu-zoom-controls > .toolbarbutton-text {
+	padding-inline-start: 24px !important;
 }
 
-/* Bookmatks */
-#PlacesToolbar menupopup[placespopup="true"] menuseparator {
-	border-top: 1px solid var(--gnome-menu-separator-color) !important;
+toolbarseparator {
+	appearance: none !important;
+	border-color: var(--kde-separator-color) !important;
+	margin: var(--kde-menu-padding) 0 !important;
+}
+
+/* Panel headers */
+.panel-header {
+	padding: var(--kde-menu-padding) !important;
+	min-height: var(--kde-menu-item-height) !important;
+
+	> h1 {
+		font-weight: bold !important;
+	}
+	/* Back button: square, icon centered */
+	.subviewbutton-back {
+		justify-content: center !important;
+		list-style-image: var(--kde-icon-back) !important;
+		margin: 0 !important;
+		min-height: 28px !important;
+		min-width: 28px !important;
+		padding: 0 !important;
+		width: 28px !important;
+
+		> .toolbarbutton-icon {
+			margin: 0 !important;
+		}
+	}
+}
+
+/* App menu sign-in promo: plain instead of purple */
+#appMenu-fxa-sign-in-promo {
+	background: transparent !important;
+	border: 1px solid var(--kde-frame-color) !important;
+	border-radius: var(--kde-radius) !important;
+	color: var(--kde-menu-fg) !important;
+	margin: 0 var(--kde-menu-padding) !important;
+
+	.fxa-menu-sign-in-promo-heading {
+		font-size: inherit !important;
+	}
+	.fxa-menu-sign-in-promo-message {
+		color: color-mix(in srgb, var(--kde-menu-fg) 70%, transparent) !important;
+	}
+}
+#appMenu-fxa-status2,
+#appMenu-fxa-label2 {
+	background: transparent !important;
+	color: var(--kde-menu-fg) !important;
+}
+#appMenu-proton-update-banner,
+.panel-banner-item {
+	border-radius: var(--kde-radius) !important;
+}
+toolbarseparator.proton-zap::before {
+	border-image: none !important;
+	border-color: var(--kde-separator-color) !important;
+}
+
+#appMenu-zoom-controls {
+	.subviewbutton {
+		margin: 0 !important;
+		min-height: 26px !important;
+		padding: 4px !important;
+	}
+	#appMenu-zoomReset-button2 {
+		padding-inline: 6px !important;
+	}
+}
+
+.panel-footer {
+	background: transparent !important;
+	margin: var(--kde-menu-padding) !important;
+	gap: 6px;
+
+	> button {
+		background-color: var(--kde-button-bg) !important;
+		border-color: var(--kde-button-frame-color) !important;
+		border-radius: var(--kde-radius) !important;
+		justify-content: center;
+		margin: 0 !important;
+	}
+}
+
+/* Tooltips */
+tooltip {
+	appearance: none !important;
+	background-color: var(--kde-tooltip-bg) !important;
+	border: 1px solid var(--kde-tooltip-border) !important;
+	border-radius: var(--kde-radius) !important;
+	color: var(--kde-tooltip-fg) !important;
+	padding: var(--kde-tooltip-padding) calc(var(--kde-tooltip-padding) * 2) !important;
+}
+#tab-preview-panel {
+	--panel-border-radius: var(--kde-radius) !important;
+}
+
+#tab-preview-panel::part(content) {
 	padding: 0 !important;
-	margin: var(--gnome-menu-padding) 0 !important;
 }
-#PlacesToolbar menupopup[placespopup="true"] menuseparator::before {
-	border: 0 !important;
+
+/* Site information panel: plain framed box */
+#trustpanel-graphic-section {
+	background: transparent !important;
+	border: 1px solid var(--kde-frame-color) !important;
+	border-radius: var(--kde-radius) !important;
+	color: var(--kde-menu-fg) !important;
+}
+.trustpanel-graphic-inner {
+	background-color: color-mix(in srgb, var(--kde-menu-fg) 6%, transparent) !important;
+	border-radius: var(--kde-radius) !important;
+}
+#trustpanel-smartblock-section {
+	--message-bar-background-color: color-mix(in srgb, rgb(from -moz-buttonactiveface r g b / 1) 20%, -moz-dialog) !important;
+	--message-bar-border-color: rgb(from -moz-buttonactiveface r g b / 1) !important;
+}
+
+/* KDE HIG: no Quit in the hamburger menu (Ctrl+Q still works).
+ * kdeTheme.showQuitMenuItem brings it back. */
+@media not -moz-pref("kdeTheme.showQuitMenuItem") {
+	#appMenu-quit-button2,
+	#appMenu-popup toolbarseparator:has(+ #appMenu-quit-button2) {
+		display: none !important;
+	}
+}
+
+/* Breeze icons in context menus, like Falkon */
+@media not -moz-pref("kdeTheme.noThemedIcons") {
+	:is(#contentAreaContextMenu, #tabContextMenu, #toolbar-context-menu, #placesContext, .textbox-contextmenu) > :is(menuitem, menu):not([type="checkbox"], [type="radio"], [checked]) > .menu-icon {
+		display: flex !important;
+		visibility: hidden !important;
+		-moz-context-properties: fill, fill-opacity !important;
+		fill: currentColor !important;
+		height: 16px !important;
+		width: 16px !important;
+		margin-inline-end: 8px !important;
+	}
+	:is(#contentAreaContextMenu, #tabContextMenu, #toolbar-context-menu, #placesContext, .textbox-contextmenu) > :is(menuitem, menu):is(
+		[command="cmd_undo"], [command="cmd_redo"], [command="cmd_cut"], [command="cmd_copy"], [command="cmd_paste"], [command="cmd_delete"], [command="cmd_selectAll"],
+		#context-undo, #context-redo, #context-cut, #context-copy, #context-paste, #context-delete, #context-selectall,
+		#context-openlinkintab, #context-openlinkincontainertab, #context-openlink, #context-openlinkprivate, #context-bookmarklink,
+		#context-savelink, #context-copylink, #context-copyimage-contents, #context-saveimage, #context-viewimage,
+		#context-savepage, #context-sendpagetodevice, #context-take-screenshot, #context-viewsource, #context-print-selection, #context-searchselect,
+		#context_openANewTab, #context_reloadTab, #context_toggleMuteTab, #context_pinTab, #context_unpinTab,
+		#context_duplicateTab, #context_bookmarkTab, #context_closeTab, #context_undoCloseTab, #context_selectAllTabs,
+		#placesContext_open\:newtab, #placesContext_open\:newwindow, #placesContext_open\:newprivatewindow,
+		#placesContext_copy, #placesContext_cut, #placesContext_paste, #placesContext_delete, #placesContext_show_bookmark\:info
+	) > .menu-icon {
+		visibility: visible !important;
+	}
+	:is(#context-undo, [command="cmd_undo"]) > .menu-icon { content: var(--kde-icon-undo) !important; }
+	:is(#context-redo, [command="cmd_redo"]) > .menu-icon { content: var(--kde-icon-redo) !important; }
+	[command="cmd_cut"] > .menu-icon { content: var(--kde-icon-cut) !important; }
+	[command="cmd_copy"] > .menu-icon { content: var(--kde-icon-copy) !important; }
+	[command="cmd_paste"] > .menu-icon { content: var(--kde-icon-paste) !important; }
+	[command="cmd_delete"] > .menu-icon { content: var(--kde-icon-delete) !important; }
+	[command="cmd_selectAll"] > .menu-icon { content: var(--kde-icon-select-all) !important; }
+	:is(#context-cut, #placesContext_cut) > .menu-icon { content: var(--kde-icon-cut) !important; }
+	:is(#context-copy, #context-copylink, #context-copyimage-contents, #placesContext_copy) > .menu-icon { content: var(--kde-icon-copy) !important; }
+	:is(#context-paste, #placesContext_paste) > .menu-icon { content: var(--kde-icon-paste) !important; }
+	:is(#context-delete, #placesContext_delete) > .menu-icon { content: var(--kde-icon-delete) !important; }
+	:is(#context-selectall, #context_selectAllTabs) > .menu-icon { content: var(--kde-icon-select-all) !important; }
+	:is(#context-openlinkintab, #context-openlinkincontainertab, #context_openANewTab, #placesContext_open\:newtab) > .menu-icon { content: var(--kde-icon-tab-new) !important; }
+	:is(#context-openlink, #placesContext_open\:newwindow) > .menu-icon { content: var(--kde-icon-new-window) !important; }
+	:is(#context-openlinkprivate, #placesContext_open\:newprivatewindow) > .menu-icon { content: var(--kde-icon-private) !important; }
+	:is(#context-bookmarklink, #context_bookmarkTab) > .menu-icon { content: var(--kde-icon-bookmark-new) !important; }
+	:is(#context-savelink, #context-saveimage, #context-savepage) > .menu-icon { content: var(--kde-icon-save) !important; }
+	#context-viewimage > .menu-icon { content: var(--kde-icon-image) !important; }
+	#context-sendpagetodevice > .menu-icon { content: var(--kde-icon-share) !important; }
+	#context-viewsource > .menu-icon { content: var(--kde-icon-source) !important; }
+	#context-print-selection > .menu-icon { content: var(--kde-icon-print) !important; }
+	#context-searchselect > .menu-icon { content: var(--kde-icon-search) !important; }
+	#context_reloadTab > .menu-icon { content: var(--kde-icon-reload) !important; }
+	#context_toggleMuteTab > .menu-icon { content: var(--kde-icon-audio-muted) !important; }
+	:is(#context_pinTab, #context_unpinTab) > .menu-icon { content: var(--kde-icon-pin) !important; }
+	#context_duplicateTab > .menu-icon { content: var(--kde-icon-duplicate) !important; }
+	#context_closeTab > .menu-icon { content: var(--kde-icon-tab-close) !important; }
+	#context_undoCloseTab > .menu-icon { content: var(--kde-icon-undo) !important; }
+	#placesContext_show_bookmark\:info > .menu-icon { content: var(--kde-icon-settings) !important; }
+	#context-take-screenshot > .menu-icon { content: var(--kde-icon-screenshot) !important; }
+
+	#context-back { --menuitem-icon: var(--kde-icon-back) !important; }
+	#context-forward { --menuitem-icon: var(--kde-icon-forward) !important; }
+	#context-reload { --menuitem-icon: var(--kde-icon-reload) !important; }
+	#context-stop { --menuitem-icon: var(--kde-icon-stop) !important; }
+	#context-bookmarkpage:not([starred]) { --menuitem-icon: var(--kde-icon-bookmark-new) !important; }
+	#context-bookmarkpage[starred] { --menuitem-icon: var(--kde-icon-starred) !important; }
+}
+
+/* Downloads panel: flat item buttons with Breeze icons */
+#downloadsListBox .downloadButton {
+	appearance: none !important;
+	background: transparent !important;
+	border: 1px solid transparent !important;
+	border-radius: var(--kde-radius) !important;
+	box-shadow: none !important;
+	min-height: 32px !important;
+	min-width: 32px !important;
+	padding: 0 !important;
+	-moz-context-properties: fill, fill-opacity !important;
+	fill: currentColor !important;
+
+	&:hover {
+		border-color: var(--kde-hover-border) !important;
+	}
+	&:hover:active {
+		background-color: var(--kde-pressed-bg) !important;
+	}
+}
+@media not -moz-pref("kdeTheme.noThemedIcons") {
+	#downloadsListBox .downloadIconShow .button-icon { list-style-image: var(--kde-icon-folder-open) !important; }
+	#downloadsListBox .downloadIconRetry .button-icon { list-style-image: var(--kde-icon-retry) !important; }
+	#downloadsListBox .downloadIconCancel .button-icon { list-style-image: var(--kde-icon-cancel) !important; }
+}
+
+/* Promo boxes: neutral instead of purple */
+moz-promo {
+	--promo-background-color: transparent !important;
+	--promo-background-color-vibrant: transparent !important;
+	--promo-border: 1px solid var(--kde-frame-color) !important;
+	--promo-border-color: var(--kde-frame-color) !important;
+	--promo-border-color-vibrant: var(--kde-frame-color) !important;
+	--promo-border-radius: var(--kde-radius) !important;
+	--promo-heading-text-color: var(--kde-menu-fg) !important;
+	--promo-heading-text-color-vibrant: var(--kde-menu-fg) !important;
+	--promo-message-text-color: var(--kde-menu-fg) !important;
+	--promo-message-text-color-vibrant: var(--kde-menu-fg) !important;
+}
+
+/* Tab/window modal dialogs */
+.dialogBox {
+	border: 1px solid var(--kde-frame-color) !important;
+	border-radius: var(--kde-radius) !important;
+	box-shadow: var(--kde-menu-shadow) !important;
+}
+.dialogFrame {
+	border-radius: var(--kde-radius) !important;
+}
+
+/* Account panel sign-in box */
+#PanelUI-fxa-menu-sign-in-promo {
+	background: transparent !important;
+	border: 1px solid var(--kde-frame-color) !important;
+	border-radius: var(--kde-radius) !important;
+	color: var(--kde-menu-fg) !important;
+	margin-inline: var(--kde-menu-padding) !important;
+
+	& * {
+		color: inherit !important;
+	}
+	:is(.fxa-sign-in-promo-description, #fxa-menu-header-description, description) {
+		opacity: 0.7;
+	}
 }
