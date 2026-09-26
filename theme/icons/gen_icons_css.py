@@ -1,125 +1,160 @@
-# Generate stylesheet with GNOME SVG icons as CSS variables.
+# Builds icons.css (and content-icons.css) from the Breeze icons listed in
+# icons.json. The SVGs are inlined as CSS variables and recolored through
+# context-fill / context-stroke:
+#   --kde-icon-<name>      16px
+#   --kde-icon-<name>-22   22px, for the names under "toolbar"
+# Names under "content" also go into content-icons.css for about: pages.
 #
-# Fetch icons from official git repos and convert them to inline CSS variables
-# adding support for reoloring in Firefox in the process.
-#
-# Git is required to run the script.
-#
-# Partially inspired by https://gitlab.gnome.org/World/design/icon-library/-/blob/master/update-icons.py
+# Uses /usr/share/icons/breeze, or clones breeze-icons if that's missing.
+# Breeze icons are LGPL-3.0-or-later.
 
 import json
 import logging
-import shutil
+import re
 import subprocess
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import TypedDict
 from urllib.parse import quote
 
 ABS_PATH = Path(__file__).resolve().parent
 ICONS_FILE = ABS_PATH / "icons.json"
 CSS_FILE = ABS_PATH / "icons.css"
-ICONS_REPO_URL = "https://gitlab.gnome.org/GNOME/adwaita-icon-theme.git"
-ICONS_REPO_PATH = ABS_PATH / "adwaita-icon-theme"
-ICONS_KIT_REPO_URL = (
-    "https://gitlab.gnome.org/Teams/Design/icon-development-kit-www.git"
-)
-ICONS_KIT_REPO_PATH = ABS_PATH / "icon-development-kit-www"
+CONTENT_CSS_FILE = ABS_PATH / "content-icons.css"
+SYSTEM_BREEZE = Path("/usr/share/icons/breeze")
+ICONS_REPO_URL = "https://invent.kde.org/frameworks/breeze-icons.git"
+ICONS_REPO_PATH = ABS_PATH / "breeze-icons"
+CONTEXTS = ["actions", "status", "places", "emblems", "apps", "categories", "devices", "mimetypes"]
 
-ET.register_namespace("", "http://www.w3.org/2000/svg")
+SVG_NS = "http://www.w3.org/2000/svg"
+ET.register_namespace("", SVG_NS)
+
+# Fixed Breeze colors for the semantic classes (identical in light and dark)
+FIXED_COLORS = {
+    "ColorScheme-NegativeText": "#da4453",
+    "ColorScheme-PositiveText": "#27ae60",
+    "ColorScheme-NeutralText": "#f67400",
+}
 
 
-class IconsDefinition(TypedDict):
-    icons: list[str]
+def icon_root() -> Path:
+    if SYSTEM_BREEZE.exists():
+        return SYSTEM_BREEZE
+    if not ICONS_REPO_PATH.exists():
+        subprocess.call(["git", "clone", "--depth", "1", ICONS_REPO_URL], cwd=ABS_PATH)
+    return ICONS_REPO_PATH / "icons"
+
+
+def find_icon(root: Path, name: str, size: int = 16) -> Path | None:
+    for context in CONTEXTS:
+        path = root / context / str(size) / f"{name}.svg"
+        if path.exists():
+            return path.resolve()
+    return None
+
+
+def process_svg(path: Path, size: int = 16) -> str:
+    tree = ET.parse(path)
+    svg = tree.getroot()
+
+    # Drop the color scheme <style> block, colors are assigned below
+    for parent in svg.iter():
+        for child in list(parent):
+            if child.tag == f"{{{SVG_NS}}}style":
+                parent.remove(child)
+
+    def class_color(el, inherited):
+        classes = el.attrib.pop("class", "").split()
+        if "ColorScheme-Text" in classes:
+            return "context-fill"
+        if "ColorScheme-Highlight" in classes:
+            return "context-stroke"
+        return next((FIXED_COLORS[c] for c in classes if c in FIXED_COLORS), inherited)
+
+    # Colors are assigned by class, which may sit on an ancestor <g>
+    def recolor(el, inherited=None):
+        color = class_color(el, inherited)
+        style = el.attrib.get("style", "")
+        if color is not None:
+            for attr in ("fill", "stroke"):
+                if el.attrib.get(attr) == "currentColor":
+                    el.set(attr, color)
+                    if color == "context-fill":
+                        el.set(f"{attr}-opacity", "context-fill-opacity")
+            style = style.replace("currentColor", color)
+        elif "currentColor" in style or "currentColor" in el.attrib.values():
+            logging.warning(f"{path.name}: currentColor without known class")
+        if style:
+            el.set("style", style)
+        for child in el:
+            recolor(child, color)
+
+    recolor(svg)
+
+    # Paths without any fill are painted black by default
+    svg.set("fill", "context-fill")
+    svg.set("fill-opacity", "context-fill-opacity")
+    svg.set("width", str(size))
+    svg.set("height", str(size))
+
+    data = ET.tostring(svg, encoding="unicode")
+    data = re.sub(r">\s+<", "><", data).strip()
+    return quote(data.replace('"', "'"), safe=" =:/;'-.,()")
 
 
 def main():
-    if not ICONS_REPO_PATH.exists():
-        subprocess.call(["git", "clone", "--depth", "1", ICONS_REPO_URL], cwd=ABS_PATH)
-    if not ICONS_KIT_REPO_PATH.exists():
-        subprocess.call(
-            ["git", "clone", "--depth", "1", ICONS_KIT_REPO_URL], cwd=ABS_PATH
-        )
+    root = icon_root()
+    with open(ICONS_FILE) as f:
+        definition = json.load(f)
+    icons: dict[str, str] = definition["icons"]
+    toolbar: list[str] = definition.get("toolbar", [])
 
-    # Get icons name to path mappings
-    icon_paths = {
-        **lookup_icons(ICONS_KIT_REPO_PATH / "img" / "symbolic"),  # Extra GNOME icons kit
-        **lookup_icons(ICONS_REPO_PATH / "Adwaita" / "symbolic"),  # Core GNOME icons
-        **lookup_icons(ABS_PATH / "custom", False),  # Custom icons
-    }
+    content: list[str] = definition.get("content", [])
 
-    # Load definition of icons needed by the theme
-    with open(ICONS_FILE, "r") as f:
-        icons_def: IconsDefinition = json.load(f)
-
-    # Process icons SVGs for CSS
-    icons_svg: dict[str, str] = {}
-    for icon in icons_def["icons"]:
-        if icon not in icon_paths:
-            logging.warning(f"No icon file found for '{icon}'")
+    lines = [
+        "/* Generated by gen_icons_css.py from KDE Breeze icons (LGPL-3.0-or-later). */",
+        ":root {",
+    ]
+    content_lines = [
+        "/* Generated by gen_icons_css.py from KDE Breeze icons (LGPL-3.0-or-later). */",
+        '@-moz-document url-prefix("about:") {',
+        "\t:root {",
+    ]
+    missing = False
+    for css_name, icon_name in icons.items():
+        path = find_icon(root, icon_name)
+        if path is None:
+            logging.error(f"No icon file found for '{icon_name}'")
+            missing = True
             continue
+        line = f'--kde-icon-{css_name}: url("data:image/svg+xml,{process_svg(path)}");'
+        lines.append("\t" + line)
+        if css_name in content:
+            content_lines.append("\t\t" + line)
 
-        text = process_svg(icon_paths[icon])
-        svg = quote(text, safe=" =:/'")  # URL encode the icon, omitting some characters
-        icons_svg[icon] = svg
+    for css_name in toolbar:
+        icon_name = icons[css_name]
+        path = find_icon(root, icon_name, 22)
+        if path is None:
+            # Keep the 16px icon, centered in the 22px box
+            logging.warning(f"No 22px icon for '{icon_name}', using the 16px one")
+            path = find_icon(root, icon_name)
+            if path is None:
+                missing = True
+                continue
+            svg = process_svg(path, 16)
+            svg = svg.replace("width='16' height='16'", "width='22' height='22'").replace("viewBox='0 0 16 16'", "viewBox='-3 -3 22 22'")
+        else:
+            svg = process_svg(path, 22)
+        lines.append(f'\t--kde-icon-{css_name}-22: url("data:image/svg+xml,{svg}");')
+    lines.append("}")
 
-    # Write CSS file
-    with open(CSS_FILE, "w") as css:
-        css.write(":root {\n")
-        for name, svg in icons_svg.items():
-            css.write(f'\t--gnome-icon-{name}: url("data:image/svg+xml,{svg}");\n')
-        css.write("}\n")
-
-    # Remove repos dirs
-    shutil.rmtree(ICONS_REPO_PATH)
-    shutil.rmtree(ICONS_KIT_REPO_PATH)
-
-
-def lookup_icons(icons_folder: Path, has_subdirs=True) -> dict[str, Path]:
-    """Finds all symbolic icons in a folder and maps their name to their Path."""
-    lookup: dict[str, Path] = {}
-
-    # Use Path.glob() for finding files
-    glob_pattern = "**/*-symbolic.svg" if has_subdirs else "*-symbolic.svg"
-    
-    for path in icons_folder.glob(glob_pattern):
-        # Use path.stem to get the filename without the .svg extension
-        name = path.stem
-        lookup[name] = path
-
-    return lookup
+    content_lines += ["\t}", "}"]
+    CSS_FILE.write_text("\n".join(lines) + "\n")
+    CONTENT_CSS_FILE.write_text("\n".join(content_lines) + "\n")
+    print(f"Wrote {len(lines) - 3} icons to {CSS_FILE}")
+    sys.exit(1 if missing else 0)
 
 
-def process_svg(filename: Path) -> str:
-    """
-    Process SVG's XML to be one liner and add Mozilla's SVG coloring properties
-    """
-    tree = ET.parse(filename)
-    root = tree.getroot()
-
-    # Set context-* values for fill and fill-opacity
-    # Needed for icon recolor from CSS
-    for tag in ("{http://www.w3.org/2000/svg}g", "{http://www.w3.org/2000/svg}path"):
-        for elem in root.iter(tag):
-            if "class" not in elem.attrib:  # Paths with class name are colored overlays
-                if "fill" in elem.attrib:
-                    elem.set("fill", "context-fill")
-                    elem.set("fill-opacity", "context-fill-opacity")
-                if "stroke" in elem.attrib:
-                    elem.set("stroke", "context-stroke")
-                    elem.set("stroke-opacity", "context-stroke-opacity")
-
-    # Strip line breaks and indentation
-    for elem in root.iter("*"):
-        if elem.text is not None:
-            elem.text = elem.text.strip()
-        if elem.tail is not None:
-            elem.tail = elem.tail.strip()
-
-    text = ET.tostring(root, "unicode")
-    text = text.replace('"', "'")  # Use single quotes
-
-    return text
-
-
-main()
+if __name__ == "__main__":
+    main()
