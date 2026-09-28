@@ -100,14 +100,6 @@ menupopup {
 		opacity: 1 !important;
 	}
 
-	menugroup > menuitem.menuitem-iconic {
-		border-radius: var(--kde-radius) !important;
-		&[_moz-menuactive]:not([disabled]) {
-			background-color: var(--kde-hover-bg) !important;
-			border-color: var(--kde-hover-border) !important;
-		}
-	}
-
 	menuitem:is([type="checkbox"], [type="radio"])[checked] .menu-icon {
 		color: rgb(from -moz-buttonactiveface r g b / 1) !important;
 		fill: currentColor !important;
@@ -246,8 +238,11 @@ toolbarseparator {
 }
 #appMenu-fxa-status2,
 #appMenu-fxa-label2 {
-	background: transparent !important;
 	color: var(--kde-menu-fg) !important;
+
+	&:not(:hover, :focus-visible, [open]) {
+		background: transparent !important;
+	}
 }
 #appMenu-proton-update-banner,
 .panel-banner-item {
