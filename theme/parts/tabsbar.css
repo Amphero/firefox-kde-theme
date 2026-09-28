@@ -50,6 +50,7 @@
 	/* Buttons in the tab bar */
 	.toolbarbutton-1 {
 		--toolbarbutton-inner-padding: 6px !important;
+		--toolbarbutton-padding-inner: 6px !important;
 		margin: 0 !important;
 		padding: 2px !important;
 

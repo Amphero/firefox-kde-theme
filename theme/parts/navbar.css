@@ -5,7 +5,9 @@
 :root {
 	--toolbarbutton-border-radius: var(--kde-radius) !important;
 	--toolbarbutton-outer-padding: 0px !important;
+	--toolbarbutton-padding-outer: 0px !important;
 	--toolbarbutton-inner-padding: 5px !important;
+	--toolbarbutton-padding-inner: 5px !important;
 	--toolbarbutton-icon-fill: var(--kde-window-fg) !important;
 	--toolbarbutton-hover-background: var(--kde-hover-bg) !important;
 	--toolbarbutton-active-background: var(--kde-pressed-bg) !important;
