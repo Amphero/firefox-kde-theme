@@ -156,13 +156,18 @@
 	/* Tab groups are pieces of their own as well (collapsed neighbors
 	 * join). <tab-group> is display: contents, so the label and the last
 	 * tab carry the gaps. */
+	/* Every gap is 2px: pieces keep it on their end side, a group also on
+	 * its start side when a normal tab comes before it */
 	tab-group > .tab-group-label-container {
 		border-start-start-radius: var(--kde-radius) !important;
-		margin-inline: 2px 0 !important;
+		margin-inline: 0 !important;
+	}
+	.tabbrowser-tab + tab-group > .tab-group-label-container {
+		margin-inline-start: 2px !important;
 	}
 	tab-group[collapsed] > .tab-group-label-container {
 		border-start-end-radius: var(--kde-radius) !important;
-		margin-inline: 2px !important;
+		margin-inline-end: 2px !important;
 	}
 	tab-group:not([collapsed]) > .tabbrowser-tab:not([hidden]):not(:has(~ .tabbrowser-tab:not([hidden]))) {
 		margin-inline-end: 2px !important;
@@ -171,9 +176,6 @@
 		> .tab-stack > .tab-background {
 			border-start-end-radius: var(--kde-radius) !important;
 		}
-	}
-	tab-group + tab-group > .tab-group-label-container {
-		margin-inline-start: 0 !important;
 	}
 	tab-group[collapsed] + tab-group[collapsed] > .tab-group-label-container {
 		border-start-start-radius: 0 !important;
