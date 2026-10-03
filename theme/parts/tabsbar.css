@@ -21,16 +21,13 @@
 	--tab-max-width: var(--kde-tab-max-width) !important;
 }
 
-/* The bar around the tabs has the title bar's header color, so title bar,
- * menu bar and tab bar form one area */
+/* Tab bar in the header color like the title bar */
 #TabsToolbar {
 	color: -moz-headerbartext !important;
 	padding: 0 !important;
 
-	/* Base line along the bottom that the selected tab breaks (Breeze
-	 * document mode): the navigation bar draws it as a border, which Firefox
-	 * snaps to one device pixel, and the tab bar overlaps it by 1px. The
-	 * header color leaves that last pixel out, tabs cover it. */
+	/* Overlaps the nav bar border by 1px so the selected tab can cover the
+	 * line (a border stays 1 device pixel, a shadow doesn't) */
 	background: linear-gradient(-moz-headerbar, -moz-headerbar) top / 100% calc(100% - 1px) no-repeat !important;
 	margin-bottom: -1px !important;
 	position: relative !important;
@@ -140,7 +137,7 @@
 		border-start-end-radius: var(--kde-radius) !important;
 	}
 
-	/* Pinned tabs: a separate piece of the strip, 2px gap between pieces */
+	/* Pinned tabs */
 	#pinned-tabs-container {
 		margin-inline-end: 2px !important;
 	}
@@ -153,11 +150,8 @@
 		border-start-end-radius: var(--kde-radius) !important;
 	}
 
-	/* Tab groups are pieces of their own as well (collapsed neighbors
-	 * join). <tab-group> is display: contents, so the label and the last
-	 * tab carry the gaps. */
-	/* Every gap is 2px: pieces keep it on their end side, a group also on
-	 * its start side when a normal tab comes before it */
+	/* Groups (tab-group is display: contents, so label and last tab get
+	 * the margins) */
 	tab-group > .tab-group-label-container {
 		border-start-start-radius: var(--kde-radius) !important;
 		margin-inline: 0 !important;
@@ -254,10 +248,8 @@
 		}
 	}
 
-	/* Tab groups: the group's tabs are tinted with the group color, the
-	 * label is filled with it. The selected tab of a group gets its
-	 * highlight line in the group color. No block padding on the overflow
-	 * count, it grows the tab bar. */
+	/* Tab groups: tabs tinted with the group color. No block padding on the
+	 * overflow count, it makes the tab bar taller. */
 	tab-group {
 		--kde-tab-group-tint: color-mix(in srgb, var(--tab-group-color) 18%, var(--kde-tab-inactive-bg));
 
@@ -303,8 +295,6 @@
 			line-height: normal !important;
 			padding-block: 0 !important;
 		}
-		/* The tint shows the group already (157 also draws the line under
-		 * the label) */
 		.tab-group-line,
 		.tab-group-label-container::after {
 			display: none !important;

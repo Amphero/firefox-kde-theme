@@ -258,8 +258,7 @@ toolbarseparator.proton-zap::before {
 	border-color: var(--kde-separator-color) !important;
 }
 
-/* Zoom row: like a widget in a QMenu the row itself doesn't highlight,
- * its buttons do, as tool buttons */
+/* Zoom row: only the buttons highlight */
 #appMenu-zoom-controls {
 	&:hover,
 	&:focus-within {

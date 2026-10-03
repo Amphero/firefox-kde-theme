@@ -94,8 +94,7 @@
 		fill: currentColor !important;
 	}
 
-	/* Page navigation (settings, add-ons): a Breeze list. The tokens sit on
-	 * the elements' :host, so they're set there. */
+	/* Settings navigation (tokens are on :host) */
 	moz-page-nav,
 	moz-page-nav-button {
 		--page-nav-button-border-radius: var(--kde-radius) !important;

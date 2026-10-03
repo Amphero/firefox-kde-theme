@@ -69,8 +69,7 @@ sidebar-panel-header,
 	outline: none !important;
 	overflow: visible !important;
 }
-/* 157 borders and rounds the content area itself; the toolbox and the
- * splitter already draw those lines */
+/* 157 adds a border and radius here */
 #tabbrowser-tabbox .browserContainer {
 	border: 0 !important;
 	border-radius: 0 !important;
@@ -79,7 +78,7 @@ sidebar-panel-header,
 /* Panel: window color, 32px title row, search field, list */
 #sidebar-box {
 	background-color: var(--kde-window-bg) !important;
-	/* 157 frames and rounds the panel, the splitters already draw the lines */
+	/* 157 adds a border and radius here too */
 	border: 0 !important;
 	border-radius: 0 !important;
 	color: var(--kde-window-fg) !important;
@@ -173,7 +172,7 @@ moz-input-search#search-box {
 .options-container moz-button.menu-button {
 	--button-size-icon: var(--kde-field-height) !important;
 	--button-min-height: var(--kde-field-height) !important;
-	/* 157 spaces the inner button with it, past the panel edge */
+	/* 157 margin, overflows the panel */
 	--space-small: 0px !important;
 	align-self: center !important;
 	height: var(--kde-field-height) !important;

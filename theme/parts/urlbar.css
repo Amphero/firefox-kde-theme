@@ -52,7 +52,7 @@
 	--urlbar-input-container-outline-breakout-focused: none !important;
 	--urlbar-input-container-border: 1px solid transparent !important;
 	--urlbar-margin-block-start-breakout: 0px !important;
-	/* Firefox 157 names ([breakout] became [open]) */
+	/* 157 */
 	--urlbar-background-overhang-open: 0px !important;
 	--urlbar-background-border-open: 1px solid rgb(from -moz-buttonactiveface r g b / 1) !important;
 	--urlbar-background-border-top-radius-open: var(--kde-radius) !important;
@@ -63,8 +63,7 @@
 	--urlbar-input-container-outline-offset-open: 0px !important;
 	--urlbar-input-growth-open-inline: 0px !important;
 	--urlbar-input-growth-open-block: 0px !important;
-	/* Firefox computes these on :root, with its own 8px overhang (the view
-	 * has no inline margin here) */
+	/* set on :root by Firefox, with the 8px overhang */
 	--urlbarView-joint-background-outset-inline: var(--urlbar-background-overhang-open) !important;
 	--urlbarView-joint-background-outset-block: calc(var(--urlbar-background-overhang-open) + var(--urlbarView-margin-block)) !important;
 	color: var(--kde-view-fg) !important;
