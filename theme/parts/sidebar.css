@@ -69,6 +69,12 @@ sidebar-panel-header,
 	outline: none !important;
 	overflow: visible !important;
 }
+/* 157 borders and rounds the content area itself; the toolbox and the
+ * splitter already draw those lines */
+#tabbrowser-tabbox .browserContainer {
+	border: 0 !important;
+	border-radius: 0 !important;
+}
 
 /* Panel: window color, 32px title row, search field, list */
 #sidebar-box {
@@ -164,6 +170,8 @@ moz-input-search#search-box {
 .options-container moz-button.menu-button {
 	--button-size-icon: var(--kde-field-height) !important;
 	--button-min-height: var(--kde-field-height) !important;
+	/* 157 spaces the inner button with it, past the panel edge */
+	--space-small: 0px !important;
 	align-self: center !important;
 	height: var(--kde-field-height) !important;
 	margin: 0 !important;
@@ -255,6 +263,8 @@ moz-fieldset.customize-group {
 	background: transparent !important;
 	border: 0 !important;
 	box-shadow: none !important;
+	/* The headings have no indent of their own (157) */
+	padding-inline: 8px !important;
 }
 
 /* History / synced tabs rows */

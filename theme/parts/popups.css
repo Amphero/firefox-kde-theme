@@ -31,6 +31,8 @@
 	--popup-border-radius: var(--kde-radius) !important;
 	--menuitem-border-radius: var(--kde-radius) !important;
 	--menuitem-padding: 0 8px !important;
+	--menuitem-padding-block: 0px !important;
+	--menuitem-padding-inline: 8px !important;
 	--menuitem-margin: 0 var(--kde-menu-padding) !important;
 	--menuitem-icon-fill: currentColor !important;
 	--arrowpanel-background: var(--kde-menu-bg) !important;

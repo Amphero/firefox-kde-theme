@@ -12,7 +12,7 @@ Based on the [Firefox GNOME theme](https://github.com/rafaelmardojai/firefox-gno
 
 Colors aren't hardcoded, they come from your KDE color scheme through the Breeze GTK theme, so light/dark and the accent color follow Plasma. Icons are Breeze icons.
 
-Tested with Firefox 156 (Flatpak) on Plasma 6. It changes a lot of Firefox internals, so if something looks broken, check vanilla Firefox first.
+Tested with Firefox 156 and 157 (Flatpak) on Plasma 6. It changes a lot of Firefox internals, so if something looks broken, check vanilla Firefox first.
 
 ## Requirements
 

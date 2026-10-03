@@ -44,6 +44,8 @@
 	--input-text-color: var(--kde-view-fg) !important;
 	--input-text-border-color: var(--kde-frame-color) !important;
 	--input-text-border-radius: var(--kde-radius) !important;
+	/* 157 Nova makes search fields round */
+	--input-search-border-radius: var(--kde-radius) !important;
 	--input-border-color: var(--kde-frame-color) !important;
 	--border-color-interactive: var(--kde-frame-color) !important;
 	--border-color-interactive-hover: var(--kde-hover-border) !important;

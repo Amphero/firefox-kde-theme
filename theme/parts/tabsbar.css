@@ -21,9 +21,17 @@
 	--tab-max-width: var(--kde-tab-max-width) !important;
 }
 
+/* The bar around the tabs has the title bar's header color, so title bar,
+ * menu bar and tab bar form one area */
 #TabsToolbar {
-	background-color: var(--kde-tabbar-bg) !important;
+	background-color: -moz-headerbar !important;
+	color: -moz-headerbartext !important;
 	padding: 0 !important;
+
+	&:-moz-window-inactive {
+		background-color: -moz-headerbarinactive !important;
+		color: -moz-headerbarinactivetext !important;
+	}
 
 	.toolbar-items {
 		align-items: stretch !important;

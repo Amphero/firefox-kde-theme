@@ -75,6 +75,8 @@
 		--input-text-color: var(--kde-view-fg) !important;
 		--input-text-border-color: var(--kde-frame-color) !important;
 		--input-text-border-radius: var(--kde-radius) !important;
+		/* 157 Nova makes search fields round */
+		--input-search-border-radius: var(--kde-radius) !important;
 
 		/* Older tokens some pages still use */
 		--in-content-page-background: var(--kde-window-bg) !important;
@@ -90,6 +92,18 @@
 		content: var(--kde-icon-close) !important;
 		-moz-context-properties: fill, fill-opacity !important;
 		fill: currentColor !important;
+	}
+
+	/* Page navigation (settings, add-ons): a Breeze list. The tokens sit on
+	 * the elements' :host, so they're set there. */
+	moz-page-nav,
+	moz-page-nav-button {
+		--page-nav-button-border-radius: var(--kde-radius) !important;
+		--page-nav-button-border-radius-focused: var(--kde-radius) !important;
+		--page-nav-button-background-color-hover: color-mix(in srgb, var(--kde-highlight) 30%, transparent) !important;
+		--page-nav-button-background-color-selected: var(--kde-selection-bg) !important;
+		--page-nav-button-text-color-selected: var(--kde-selection-fg) !important;
+		--page-nav-button-indicator-width: 0 !important;
 	}
 
 	::selection {
