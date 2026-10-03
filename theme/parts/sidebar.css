@@ -79,6 +79,9 @@ sidebar-panel-header,
 /* Panel: window color, 32px title row, search field, list */
 #sidebar-box {
 	background-color: var(--kde-window-bg) !important;
+	/* 157 frames and rounds the panel, the splitters already draw the lines */
+	border: 0 !important;
+	border-radius: 0 !important;
 	color: var(--kde-window-fg) !important;
 	padding: 0 !important;
 }

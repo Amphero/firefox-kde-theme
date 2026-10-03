@@ -28,6 +28,10 @@
 	color: -moz-headerbartext !important;
 	padding: 0 !important;
 
+	/* Base line along the bottom, the selected tab breaks it (Breeze
+	 * document mode). Tabs and group labels draw their part themselves. */
+	box-shadow: inset 0 -1px var(--kde-frame-color) !important;
+
 	&:-moz-window-inactive {
 		background-color: -moz-headerbarinactive !important;
 		color: -moz-headerbarinactivetext !important;
@@ -88,7 +92,7 @@
 		background-image: none !important;
 		border: 0 !important;
 		border-radius: 0 !important;
-		box-shadow: none !important;
+		box-shadow: inset 0 -1px var(--kde-frame-color) !important;
 		margin: 0 !important;
 		min-height: var(--kde-tab-height) !important;
 		outline: none !important;
@@ -105,6 +109,7 @@
 			border-top-color: var(--kde-tab-highlight) !important;
 			border-bottom: 0 !important;
 			border-radius: var(--kde-radius) var(--kde-radius) 0 0 !important;
+			box-shadow: none !important;
 		}
 
 		&[multiselected]:not([selected]) {
@@ -241,6 +246,7 @@
 		.tab-group-label-container,
 		.tab-group-overflow-count-container {
 			background-color: var(--kde-tab-inactive-bg) !important;
+			box-shadow: inset 0 -1px var(--kde-frame-color) !important;
 			align-items: center !important;
 			justify-content: center !important;
 			max-height: var(--kde-tab-height) !important;

@@ -258,14 +258,33 @@ toolbarseparator.proton-zap::before {
 	border-color: var(--kde-separator-color) !important;
 }
 
+/* Zoom row: like a widget in a QMenu the row itself doesn't highlight,
+ * its buttons do, as tool buttons */
 #appMenu-zoom-controls {
+	&:hover,
+	&:focus-within {
+		background-color: transparent !important;
+		border-color: transparent !important;
+	}
 	.subviewbutton {
 		margin: 0 !important;
 		min-height: 26px !important;
 		padding: 4px !important;
+
+		&:not([disabled]):hover {
+			background-color: transparent !important;
+			border-color: rgb(from -moz-buttonactiveface r g b / 1) !important;
+		}
+		&:not([disabled]):hover:active {
+			background-color: rgb(from -moz-buttonactiveface r g b / 0.3) !important;
+		}
 	}
 	#appMenu-zoomReset-button2 {
 		padding-inline: 6px !important;
+	}
+	/* 157 puts a button background behind the fullscreen icon */
+	#appMenu-fullscreen-button2 > .toolbarbutton-icon {
+		background-color: transparent !important;
 	}
 }
 
