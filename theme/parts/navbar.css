@@ -20,9 +20,11 @@
 	--toolbar-start-end-padding: var(--kde-toolbar-padding) !important;
 }
 
-/* 7px above, 8px below the field (Falkon) */
+/* Field and buttons centered between the two lines */
 #nav-bar {
-	padding: 7px var(--kde-toolbar-padding) 8px !important;
+	/* The line under the tab bar, see tabsbar.css */
+	border-top: 1px solid var(--kde-toolbar-separator-color) !important;
+	padding: 7.5px var(--kde-toolbar-padding) !important;
 	min-height: calc(var(--kde-field-height) + 15px) !important;
 }
 

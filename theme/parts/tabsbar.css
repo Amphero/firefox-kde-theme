@@ -24,16 +24,20 @@
 /* The bar around the tabs has the title bar's header color, so title bar,
  * menu bar and tab bar form one area */
 #TabsToolbar {
-	background-color: -moz-headerbar !important;
 	color: -moz-headerbartext !important;
 	padding: 0 !important;
 
-	/* Base line along the bottom, the selected tab breaks it (Breeze
-	 * document mode). Tabs and group labels draw their part themselves. */
-	box-shadow: inset 0 -1px var(--kde-frame-color) !important;
+	/* Base line along the bottom that the selected tab breaks (Breeze
+	 * document mode): the navigation bar draws it as a border, which Firefox
+	 * snaps to one device pixel, and the tab bar overlaps it by 1px. The
+	 * header color leaves that last pixel out, tabs cover it. */
+	background: linear-gradient(-moz-headerbar, -moz-headerbar) top / 100% calc(100% - 1px) no-repeat !important;
+	margin-bottom: -1px !important;
+	position: relative !important;
+	z-index: 1 !important;
 
 	&:-moz-window-inactive {
-		background-color: -moz-headerbarinactive !important;
+		background: linear-gradient(-moz-headerbarinactive, -moz-headerbarinactive) top / 100% calc(100% - 1px) no-repeat !important;
 		color: -moz-headerbarinactivetext !important;
 	}
 
@@ -92,7 +96,7 @@
 		background-image: none !important;
 		border: 0 !important;
 		border-radius: 0 !important;
-		box-shadow: inset 0 -1px var(--kde-frame-color) !important;
+		box-shadow: none !important;
 		margin: 0 !important;
 		min-height: var(--kde-tab-height) !important;
 		outline: none !important;
@@ -136,8 +140,7 @@
 		border-start-end-radius: var(--kde-radius) !important;
 	}
 
-	/* Pinned tabs and collapsed groups: separate pieces of the strip,
-	 * neighbors of the same kind join, 2px gap between pieces */
+	/* Pinned tabs: a separate piece of the strip, 2px gap between pieces */
 	#pinned-tabs-container {
 		margin-inline-end: 2px !important;
 	}
@@ -150,33 +153,42 @@
 		border-start-end-radius: var(--kde-radius) !important;
 	}
 
-	/* <tab-group> is display: contents, so the label gets the margins */
+	/* Tab groups are pieces of their own as well (collapsed neighbors
+	 * join). <tab-group> is display: contents, so the label and the last
+	 * tab carry the gaps. */
 	tab-group > .tab-group-label-container {
-		margin-inline: 0 !important;
+		border-start-start-radius: var(--kde-radius) !important;
+		margin-inline: 2px 0 !important;
 	}
 	tab-group[collapsed] > .tab-group-label-container {
-		border-start-start-radius: var(--kde-radius) !important;
 		border-start-end-radius: var(--kde-radius) !important;
 		margin-inline: 2px !important;
 	}
+	tab-group:not([collapsed]) > .tabbrowser-tab:not([hidden]):not(:has(~ .tabbrowser-tab:not([hidden]))) {
+		margin-inline-end: 2px !important;
+
+		&,
+		> .tab-stack > .tab-background {
+			border-start-end-radius: var(--kde-radius) !important;
+		}
+	}
+	tab-group + tab-group > .tab-group-label-container {
+		margin-inline-start: 0 !important;
+	}
 	tab-group[collapsed] + tab-group[collapsed] > .tab-group-label-container {
 		border-start-start-radius: 0 !important;
-		margin-inline-start: 0 !important;
 	}
 	tab-group[collapsed]:has(+ tab-group[collapsed]) > .tab-group-label-container {
 		border-start-end-radius: 0 !important;
 		margin-inline-end: 0 !important;
 	}
-	/* Round the strip next to a collapsed group */
-	#tabbrowser-arrowscrollbox > .tabbrowser-tab:has(+ tab-group[collapsed]),
-	#tabbrowser-arrowscrollbox > .tabbrowser-tab:has(+ tab-group[collapsed]) > .tab-stack > .tab-background,
-	tab-group:not([collapsed]):has(+ tab-group[collapsed]) > .tabbrowser-tab:not(:has(~ .tabbrowser-tab)),
-	tab-group:not([collapsed]):has(+ tab-group[collapsed]) > .tabbrowser-tab:not(:has(~ .tabbrowser-tab)) > .tab-stack > .tab-background {
+	/* Round the strip next to a group */
+	#tabbrowser-arrowscrollbox > .tabbrowser-tab:has(+ tab-group),
+	#tabbrowser-arrowscrollbox > .tabbrowser-tab:has(+ tab-group) > .tab-stack > .tab-background {
 		border-start-end-radius: var(--kde-radius) !important;
 	}
-	#tabbrowser-arrowscrollbox > tab-group[collapsed] + .tabbrowser-tab,
-	#tabbrowser-arrowscrollbox > tab-group[collapsed] + .tabbrowser-tab > .tab-stack > .tab-background,
-	tab-group[collapsed] + tab-group:not([collapsed]) > .tab-group-label-container {
+	#tabbrowser-arrowscrollbox > tab-group + .tabbrowser-tab,
+	#tabbrowser-arrowscrollbox > tab-group + .tabbrowser-tab > .tab-stack > .tab-background {
 		border-start-start-radius: var(--kde-radius) !important;
 	}
 
@@ -240,35 +252,45 @@
 		}
 	}
 
-	/* Tab groups: chip in the group color, 2px line under the tabs.
-	 * No block padding on the overflow count, it grows the tab bar. */
+	/* Tab groups: the group's tabs are tinted with the group color, the
+	 * label is filled with it. The selected tab of a group gets its
+	 * highlight line in the group color. No block padding on the overflow
+	 * count, it grows the tab bar. */
 	tab-group {
+		--kde-tab-group-tint: color-mix(in srgb, var(--tab-group-color) 30%, var(--kde-tab-inactive-bg));
+
 		.tab-group-label-container,
 		.tab-group-overflow-count-container {
-			background-color: var(--kde-tab-inactive-bg) !important;
-			box-shadow: inset 0 -1px var(--kde-frame-color) !important;
+			background-color: var(--kde-tab-group-tint) !important;
 			align-items: center !important;
 			justify-content: center !important;
 			max-height: var(--kde-tab-height) !important;
 			padding-block: 0 !important;
-			padding-inline: 4px !important;
+			padding-inline: 6px !important;
+		}
+		> .tabbrowser-tab > .tab-stack > .tab-background {
+			--kde-tab-highlight: var(--tab-group-color);
+
+			&:not([selected], [multiselected]) {
+				background-color: var(--kde-tab-group-tint) !important;
+			}
+		}
+		> .tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected], [multiselected]) {
+			background-color: color-mix(in srgb, var(--tab-group-color) 45%, var(--kde-tab-inactive-bg)) !important;
 		}
 		.tab-group-label-hover-highlight {
 			border-radius: var(--kde-radius) !important;
 			padding-block: 0 !important;
 		}
 		.tab-group-label {
-			background-color: color-mix(in srgb, var(--tab-group-color) 22%, var(--kde-window-bg)) !important;
-			border: 1px solid var(--tab-group-color) !important;
+			background-color: var(--tab-group-color) !important;
+			border: 0 !important;
 			border-radius: var(--kde-radius) !important;
-			color: var(--kde-window-fg) !important;
+			color: var(--tab-group-label-text-color, white) !important;
 			font-weight: normal !important;
-			line-height: 20px !important;
+			line-height: 22px !important;
 			min-height: 22px !important;
 			padding: 0 8px !important;
-		}
-		&[collapsed] .tab-group-label {
-			background-color: color-mix(in srgb, var(--tab-group-color) 40%, var(--kde-window-bg)) !important;
 		}
 		.tab-group-label:empty {
 			min-width: 22px !important;
@@ -279,10 +301,11 @@
 			line-height: normal !important;
 			padding-block: 0 !important;
 		}
-		.tab-group-line {
-			border-radius: 0 !important;
-			height: 2px !important;
-			margin-block-end: 0 !important;
+		/* The tint shows the group already (157 also draws the line under
+		 * the label) */
+		.tab-group-line,
+		.tab-group-label-container::after {
+			display: none !important;
 		}
 	}
 
