@@ -259,7 +259,7 @@
 	 * highlight line in the group color. No block padding on the overflow
 	 * count, it grows the tab bar. */
 	tab-group {
-		--kde-tab-group-tint: color-mix(in srgb, var(--tab-group-color) 30%, var(--kde-tab-inactive-bg));
+		--kde-tab-group-tint: color-mix(in srgb, var(--tab-group-color) 18%, var(--kde-tab-inactive-bg));
 
 		.tab-group-label-container,
 		.tab-group-overflow-count-container {
@@ -278,7 +278,7 @@
 			}
 		}
 		> .tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected], [multiselected]) {
-			background-color: color-mix(in srgb, var(--tab-group-color) 45%, var(--kde-tab-inactive-bg)) !important;
+			background-color: color-mix(in srgb, var(--tab-group-color) 28%, var(--kde-tab-inactive-bg)) !important;
 		}
 		.tab-group-label-hover-highlight {
 			border-radius: var(--kde-radius) !important;
@@ -288,7 +288,7 @@
 			background-color: var(--tab-group-color) !important;
 			border: 0 !important;
 			border-radius: var(--kde-radius) !important;
-			color: var(--tab-group-label-text-color, white) !important;
+			color: contrast-color(var(--tab-group-color)) !important;
 			font-weight: normal !important;
 			line-height: 22px !important;
 			min-height: 22px !important;

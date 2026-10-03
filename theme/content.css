@@ -211,6 +211,8 @@
 
 @-moz-document url("about:privatebrowsing") {
 	html.private {
+		/* Firefox keeps this page dark, here it follows the system */
+		color-scheme: light dark !important;
 		--background-color-canvas: var(--kde-window-bg) !important;
 		--text-color: var(--kde-window-fg) !important;
 		background: var(--kde-window-bg) !important;
@@ -219,6 +221,10 @@
 
 	.wordmark {
 		fill: currentColor !important;
+	}
+	/* Plain window color, without the fox tail drawn behind the page */
+	body::before {
+		display: none !important;
 	}
 
 	.search-handoff-button {
@@ -249,6 +255,7 @@
 			background: none !important;
 			box-shadow: none !important;
 			color: var(--kde-window-fg) !important;
+			padding: 8px 12px !important;
 		}
 	}
 }
