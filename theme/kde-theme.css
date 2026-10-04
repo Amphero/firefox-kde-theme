@@ -21,6 +21,6 @@
 /* Theme name in customize mode */
 #customization-footer::before {
 	background: url(../icon.svg) no-repeat left center / contain;
-	content: "Firefox KDE theme v156";
+	content: "Firefox KDE theme v157";
 	padding: 9px 9px 9px 40px;
 }
