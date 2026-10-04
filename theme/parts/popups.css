@@ -244,6 +244,29 @@ toolbarseparator {
 		background: transparent !important;
 	}
 }
+/* Signed in: the container wraps the account row, only the row highlights.
+ * The row gets the user icon so the name lines up with the other items. */
+#appMenu-fxa-status2[fxastatus] {
+	background: transparent !important;
+	border: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+#appMenu-fxa-status2[fxastatus] > #appMenu-fxa-label2 {
+	&::before {
+		background: var(--kde-icon-user) center / 16px no-repeat;
+		content: "";
+		flex-shrink: 0;
+		height: 16px;
+		margin-inline-end: 8px;
+		-moz-context-properties: fill, fill-opacity;
+		fill: currentColor;
+		width: 16px;
+	}
+	#appMenu-header-description {
+		font-weight: normal !important;
+	}
+}
 #appMenu-proton-update-banner,
 .panel-banner-item {
 	border-radius: var(--kde-radius) !important;
