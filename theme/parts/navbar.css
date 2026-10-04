@@ -30,8 +30,9 @@
 	min-height: calc(var(--kde-field-height) + 15px) !important;
 }
 
-/* URL bar takes all the free space */
-#nav-bar toolbarspring {
+/* URL bar takes the free space: Firefox's two default spaces around it are
+ * hidden, spaces added in customize mode stay */
+#nav-bar-customization-target > :is(#customizableui-special-spring1, #customizableui-special-spring2) {
 	display: none !important;
 }
 
@@ -116,7 +117,7 @@
 	min-height: var(--kde-button-size) !important;
 }
 
-toolbarspring {
+#TabsToolbar toolbarspring {
 	max-width: 10000px !important;
 }
 
