@@ -24,7 +24,8 @@
 /* Tab bar in the header color like the title bar */
 #TabsToolbar {
 	color: -moz-headerbartext !important;
-	padding: 0 !important;
+	/* A little room to the window edge */
+	padding: 0 4px !important;
 
 	/* Overlaps the nav bar border by 1px so the selected tab can cover the
 	 * line (a border stays 1 device pixel, a shadow doesn't) */
